@@ -1,0 +1,119 @@
+import "base.api"
+
+type (
+    // The response data of student information | Student信息
+    StudentInfo {
+        BaseIDInfo
+
+        // Name
+        Name  string `json:"name,optional"`
+
+        // Age
+        Age  int `json:"age,optional"`
+
+        // AgeInt8
+        AgeInt8  int8 `json:"ageInt8,optional"`
+
+        // AgeUint8
+        AgeUint8  uint8 `json:"ageUint8,optional"`
+
+        // AgeInt16
+        AgeInt16  int16 `json:"ageInt16,optional"`
+
+        // AgeUint16
+        AgeUint16  uint16 `json:"ageUint16,optional"`
+
+        // AgeInt32
+        AgeInt32  int32 `json:"ageInt32,optional"`
+
+        // AgeUint32
+        AgeUint32  uint32 `json:"ageUint32,optional"`
+
+        // AgeInt64
+        AgeInt64  int64 `json:"ageInt64,optional"`
+
+        // AgeUint64
+        AgeUint64  uint64 `json:"ageUint64,optional"`
+
+        // AgeInt
+        AgeInt  int `json:"ageInt,optional"`
+
+        // AgeUint
+        AgeUint  uint `json:"ageUint,optional"`
+
+        // WeightFloat
+        WeightFloat  float64 `json:"weightFloat,optional"`
+
+        // WeightFloat32
+        WeightFloat32  float32 `json:"weightFloat32,optional"`
+
+        // ClassId
+        ClassId  string `json:"classId,optional"`
+
+        // EnrollAt
+        EnrollAt  int64 `json:"enrollAt,optional"`
+
+        // StatusBool
+        StatusBool  bool `json:"statusBool,optional"`
+    }
+
+    // The response data of student list | Student列表数据
+    StudentListResp {
+        BaseDataInfo
+
+        // Student list data | Student列表数据
+        Data StudentListInfo `json:"data"`
+    }
+
+    // Student list data | Student列表数据
+    StudentListInfo {
+        BaseListInfo
+
+        // The API list data | Student列表数据
+        Data  []StudentInfo  `json:"data"`
+    }
+
+    // Get student list request params | Student列表请求参数
+    StudentListReq {
+        PageInfo
+
+        // Name
+        Name  string `json:"name,optional"`
+    }
+
+    // Student information response | Student信息返回体
+    StudentInfoResp {
+        BaseDataInfo
+
+        // Student information | Student数据
+        Data StudentInfo `json:"data"`
+    }
+)
+
+@server(
+    jwt: Auth
+    group: student
+    middleware: Authority
+)
+
+service example {
+    // Create student information | 创建Student
+    @handler createStudent
+    post /student/create (StudentInfo) returns (BaseMsgResp)
+
+    // Update student information | 更新Student
+    @handler updateStudent
+    post /student/update (StudentInfo) returns (BaseMsgResp)
+
+    // Delete student information | 删除Student信息
+    @handler deleteStudent
+    post /student/delete (IDsReq) returns (BaseMsgResp)
+
+    // Get student list | 获取Student列表
+    @handler getStudentList
+    post /student/list (StudentListReq) returns (StudentListResp)
+
+    // Get student by ID | 通过ID获取Student
+    @handler getStudentById
+    post /student (IDReq) returns (StudentInfoResp)
+}
