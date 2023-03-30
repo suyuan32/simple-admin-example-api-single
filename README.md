@@ -4,7 +4,7 @@ Simple Admin 单体API 服务例子。Simple Admin single API service example.
 # 生成命令 | Command
 
 ```shell
-goctls api new example --i18n=true --casbin=true --go_zero_version=v1.5.0 --tool_version=v0.2.8 --trans_err=true --module_name=github.com/suyuan32/simple-admin-example-api --port=8081 --gitlab=true --ent=true
+goctls api new example --i18n=true --casbin=true --go_zero_version=v1.5.0 --tool_version=v0.3.0 --trans_err=true --module_name=github.com/suyuan32/simple-admin-example-api --port=8081 --gitlab=true --ent=true
 
 cd example
 # 修改 ent/schema/example 为 student | Modify ent/schema/example to student
