@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	uuid "github.com/gofrs/uuid/v5"
 	"github.com/suyuan32/simple-admin-example-api/ent/student"
@@ -54,7 +55,8 @@ type Student struct {
 	// EnrollAt holds the value of the "enroll_at" field.
 	EnrollAt time.Time `json:"enroll_at,omitempty"`
 	// StatusBool holds the value of the "status_bool" field.
-	StatusBool bool `json:"status_bool,omitempty"`
+	StatusBool   bool `json:"status_bool,omitempty"`
+	selectValues sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -75,7 +77,7 @@ func (*Student) scanValues(columns []string) ([]any, error) {
 		case student.FieldClassID:
 			values[i] = new(uuid.UUID)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Student", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -209,9 +211,17 @@ func (s *Student) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				s.StatusBool = value.Bool
 			}
+		default:
+			s.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the Student.
+// This includes values selected through modifiers, order, etc.
+func (s *Student) Value(name string) (ent.Value, error) {
+	return s.selectValues.Get(name)
 }
 
 // Update returns a builder for updating this Student.

@@ -3,7 +3,7 @@ module github.com/suyuan32/simple-admin-example-api
 go 1.20
 
 require (
-	entgo.io/ent v0.11.10
+	entgo.io/ent v0.12.0
 	github.com/casbin/casbin/v2 v2.65.2
 	github.com/gofrs/uuid/v5 v5.0.0
 	github.com/suyuan32/simple-admin-common v0.2.9
