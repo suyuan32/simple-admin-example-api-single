@@ -5,6 +5,6 @@ package runtime
 // The schema-stitching logic is generated in github.com/suyuan32/simple-admin-example-api/ent/runtime.go
 
 const (
-	Version = "v0.12.0"                                         // Version of ent codegen.
-	Sum     = "h1:DTub/yd0pMK9s0ONfZps2cYkyD2VPIuknVBv10BESc0=" // Sum of ent codegen.
+	Version = "v0.12.3"                                         // Version of ent codegen.
+	Sum     = "h1:N5lO2EOrHpCH5HYfiMOCHYbo+oh5M8GjT0/cx5x6xkk=" // Sum of ent codegen.
 )

@@ -98,105 +98,105 @@ var (
 	UpdateDefaultUpdatedAt func() time.Time
 )
 
-// Order defines the ordering method for the Student queries.
-type Order func(*sql.Selector)
+// OrderOption defines the ordering options for the Student queries.
+type OrderOption func(*sql.Selector)
 
 // ByID orders the results by the id field.
-func ByID(opts ...sql.OrderTermOption) Order {
+func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
-func ByCreatedAt(opts ...sql.OrderTermOption) Order {
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
 // ByUpdatedAt orders the results by the updated_at field.
-func ByUpdatedAt(opts ...sql.OrderTermOption) Order {
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }
 
 // ByName orders the results by the name field.
-func ByName(opts ...sql.OrderTermOption) Order {
+func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
 // ByAge orders the results by the age field.
-func ByAge(opts ...sql.OrderTermOption) Order {
+func ByAge(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAge, opts...).ToFunc()
 }
 
 // ByAgeInt8 orders the results by the age_int8 field.
-func ByAgeInt8(opts ...sql.OrderTermOption) Order {
+func ByAgeInt8(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeInt8, opts...).ToFunc()
 }
 
 // ByAgeUint8 orders the results by the age_uint8 field.
-func ByAgeUint8(opts ...sql.OrderTermOption) Order {
+func ByAgeUint8(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeUint8, opts...).ToFunc()
 }
 
 // ByAgeInt16 orders the results by the age_int16 field.
-func ByAgeInt16(opts ...sql.OrderTermOption) Order {
+func ByAgeInt16(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeInt16, opts...).ToFunc()
 }
 
 // ByAgeUint16 orders the results by the age_uint16 field.
-func ByAgeUint16(opts ...sql.OrderTermOption) Order {
+func ByAgeUint16(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeUint16, opts...).ToFunc()
 }
 
 // ByAgeInt32 orders the results by the age_int32 field.
-func ByAgeInt32(opts ...sql.OrderTermOption) Order {
+func ByAgeInt32(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeInt32, opts...).ToFunc()
 }
 
 // ByAgeUint32 orders the results by the age_uint32 field.
-func ByAgeUint32(opts ...sql.OrderTermOption) Order {
+func ByAgeUint32(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeUint32, opts...).ToFunc()
 }
 
 // ByAgeInt64 orders the results by the age_int64 field.
-func ByAgeInt64(opts ...sql.OrderTermOption) Order {
+func ByAgeInt64(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeInt64, opts...).ToFunc()
 }
 
 // ByAgeUint64 orders the results by the age_uint64 field.
-func ByAgeUint64(opts ...sql.OrderTermOption) Order {
+func ByAgeUint64(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeUint64, opts...).ToFunc()
 }
 
 // ByAgeInt orders the results by the age_int field.
-func ByAgeInt(opts ...sql.OrderTermOption) Order {
+func ByAgeInt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeInt, opts...).ToFunc()
 }
 
 // ByAgeUint orders the results by the age_uint field.
-func ByAgeUint(opts ...sql.OrderTermOption) Order {
+func ByAgeUint(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgeUint, opts...).ToFunc()
 }
 
 // ByWeightFloat orders the results by the weight_float field.
-func ByWeightFloat(opts ...sql.OrderTermOption) Order {
+func ByWeightFloat(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldWeightFloat, opts...).ToFunc()
 }
 
 // ByWeightFloat32 orders the results by the weight_float32 field.
-func ByWeightFloat32(opts ...sql.OrderTermOption) Order {
+func ByWeightFloat32(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldWeightFloat32, opts...).ToFunc()
 }
 
 // ByClassID orders the results by the class_id field.
-func ByClassID(opts ...sql.OrderTermOption) Order {
+func ByClassID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldClassID, opts...).ToFunc()
 }
 
 // ByEnrollAt orders the results by the enroll_at field.
-func ByEnrollAt(opts ...sql.OrderTermOption) Order {
+func ByEnrollAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEnrollAt, opts...).ToFunc()
 }
 
 // ByStatusBool orders the results by the status_bool field.
-func ByStatusBool(opts ...sql.OrderTermOption) Order {
+func ByStatusBool(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatusBool, opts...).ToFunc()
 }

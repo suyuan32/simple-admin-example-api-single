@@ -115,7 +115,7 @@ type BaseUUIDInfo {
 	group: base
 )
 
-service example {
+service Example {
 	// Initialize database | 初始化数据库
 	@handler initDatabase
 	get /init/database returns (BaseMsgResp)

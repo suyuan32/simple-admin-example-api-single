@@ -236,7 +236,7 @@ func (su *StudentUpdate) Mutation() *StudentMutation {
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (su *StudentUpdate) Save(ctx context.Context) (int, error) {
 	su.defaults()
-	return withHooks[int, StudentMutation](ctx, su.sqlSave, su.mutation, su.hooks)
+	return withHooks(ctx, su.sqlSave, su.mutation, su.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -611,7 +611,7 @@ func (suo *StudentUpdateOne) Select(field string, fields ...string) *StudentUpda
 // Save executes the query and returns the updated Student entity.
 func (suo *StudentUpdateOne) Save(ctx context.Context) (*Student, error) {
 	suo.defaults()
-	return withHooks[*Student, StudentMutation](ctx, suo.sqlSave, suo.mutation, suo.hooks)
+	return withHooks(ctx, suo.sqlSave, suo.mutation, suo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

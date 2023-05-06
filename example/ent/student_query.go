@@ -18,7 +18,7 @@ import (
 type StudentQuery struct {
 	config
 	ctx        *QueryContext
-	order      []student.Order
+	order      []student.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Student
 	// intermediate query (i.e. traversal path).
@@ -52,7 +52,7 @@ func (sq *StudentQuery) Unique(unique bool) *StudentQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (sq *StudentQuery) Order(o ...student.Order) *StudentQuery {
+func (sq *StudentQuery) Order(o ...student.OrderOption) *StudentQuery {
 	sq.order = append(sq.order, o...)
 	return sq
 }
@@ -246,7 +246,7 @@ func (sq *StudentQuery) Clone() *StudentQuery {
 	return &StudentQuery{
 		config:     sq.config,
 		ctx:        sq.ctx.Clone(),
-		order:      append([]student.Order{}, sq.order...),
+		order:      append([]student.OrderOption{}, sq.order...),
 		inters:     append([]Interceptor{}, sq.inters...),
 		predicates: append([]predicate.Student{}, sq.predicates...),
 		// clone intermediate query.
