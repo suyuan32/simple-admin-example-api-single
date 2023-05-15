@@ -52,5 +52,5 @@ func (l *UpdateStudentLogic) UpdateStudent(req *types.StudentInfo) (*types.BaseM
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, req)
 	}
 
-	return &types.BaseMsgResp{Msg: i18n.UpdateSuccess}, nil
+	return &types.BaseMsgResp{Msg: l.svcCtx.Trans.Trans(l.ctx, i18n.UpdateSuccess)}, nil
 }

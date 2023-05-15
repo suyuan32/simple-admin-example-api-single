@@ -34,7 +34,7 @@ func (l *GetStudentByIdLogic) GetStudentById(req *types.IDReq) (*types.StudentIn
 	return &types.StudentInfoResp{
 		BaseDataInfo: types.BaseDataInfo{
 			Code: 0,
-			Msg:  l.svcCtx.Trans.Trans(l.ctx, i18n.Success),
+			Msg:  l.svcCtx.Trans.Trans(l.ctx, i18n.CreateSuccess),
 		},
 		Data: types.StudentInfo{
 			BaseIDInfo: types.BaseIDInfo{

@@ -33,5 +33,5 @@ func (l *DeleteStudentLogic) DeleteStudent(req *types.IDsReq) (*types.BaseMsgRes
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, req)
 	}
 
-	return &types.BaseMsgResp{Msg: i18n.DeleteSuccess}, nil
+	return &types.BaseMsgResp{Msg: l.svcCtx.Trans.Trans(l.ctx, i18n.DeleteSuccess)}, nil
 }
