@@ -17,4 +17,7 @@ make gen-ent
 
 # 生成逻辑代码
 make gen-api-ent-logic model=Student group=student
+
+# 生成必要文件
+make gen-api
 ```
