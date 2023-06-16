@@ -47,6 +47,8 @@ const (
 	FieldWeightFloat32 = "weight_float32"
 	// FieldClassID holds the string denoting the class_id field in the database.
 	FieldClassID = "class_id"
+	// FieldTeacherID holds the string denoting the teacher_id field in the database.
+	FieldTeacherID = "teacher_id"
 	// FieldEnrollAt holds the string denoting the enroll_at field in the database.
 	FieldEnrollAt = "enroll_at"
 	// FieldStatusBool holds the string denoting the status_bool field in the database.
@@ -75,6 +77,7 @@ var Columns = []string{
 	FieldWeightFloat,
 	FieldWeightFloat32,
 	FieldClassID,
+	FieldTeacherID,
 	FieldEnrollAt,
 	FieldStatusBool,
 }
@@ -189,6 +192,11 @@ func ByWeightFloat32(opts ...sql.OrderTermOption) OrderOption {
 // ByClassID orders the results by the class_id field.
 func ByClassID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldClassID, opts...).ToFunc()
+}
+
+// ByTeacherID orders the results by the teacher_id field.
+func ByTeacherID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTeacherID, opts...).ToFunc()
 }
 
 // ByEnrollAt orders the results by the enroll_at field.

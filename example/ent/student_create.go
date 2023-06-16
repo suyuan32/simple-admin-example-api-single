@@ -139,6 +139,12 @@ func (sc *StudentCreate) SetClassID(u uuid.UUID) *StudentCreate {
 	return sc
 }
 
+// SetTeacherID sets the "teacher_id" field.
+func (sc *StudentCreate) SetTeacherID(u uint64) *StudentCreate {
+	sc.mutation.SetTeacherID(u)
+	return sc
+}
+
 // SetEnrollAt sets the "enroll_at" field.
 func (sc *StudentCreate) SetEnrollAt(t time.Time) *StudentCreate {
 	sc.mutation.SetEnrollAt(t)
@@ -255,6 +261,9 @@ func (sc *StudentCreate) check() error {
 	if _, ok := sc.mutation.ClassID(); !ok {
 		return &ValidationError{Name: "class_id", err: errors.New(`ent: missing required field "Student.class_id"`)}
 	}
+	if _, ok := sc.mutation.TeacherID(); !ok {
+		return &ValidationError{Name: "teacher_id", err: errors.New(`ent: missing required field "Student.teacher_id"`)}
+	}
 	if _, ok := sc.mutation.EnrollAt(); !ok {
 		return &ValidationError{Name: "enroll_at", err: errors.New(`ent: missing required field "Student.enroll_at"`)}
 	}
@@ -360,6 +369,10 @@ func (sc *StudentCreate) createSpec() (*Student, *sqlgraph.CreateSpec) {
 	if value, ok := sc.mutation.ClassID(); ok {
 		_spec.SetField(student.FieldClassID, field.TypeUUID, value)
 		_node.ClassID = value
+	}
+	if value, ok := sc.mutation.TeacherID(); ok {
+		_spec.SetField(student.FieldTeacherID, field.TypeUint64, value)
+		_node.TeacherID = value
 	}
 	if value, ok := sc.mutation.EnrollAt(); ok {
 		_spec.SetField(student.FieldEnrollAt, field.TypeTime, value)

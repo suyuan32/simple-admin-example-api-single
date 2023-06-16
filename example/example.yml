@@ -228,6 +228,11 @@ definitions:
                 description: StatusBool
                 type: boolean
                 x-go-name: StatusBool
+            teacherId:
+                description: TeacherId
+                format: uint64
+                type: integer
+                x-go-name: TeacherId
             updatedAt:
                 description: Update date | 更新日期
                 format: int64

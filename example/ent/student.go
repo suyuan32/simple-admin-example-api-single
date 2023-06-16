@@ -52,6 +52,8 @@ type Student struct {
 	WeightFloat32 float32 `json:"weight_float32,omitempty"`
 	// ClassID holds the value of the "class_id" field.
 	ClassID uuid.UUID `json:"class_id,omitempty"`
+	// TeacherID holds the value of the "teacher_id" field.
+	TeacherID uint64 `json:"teacher_id,omitempty"`
 	// EnrollAt holds the value of the "enroll_at" field.
 	EnrollAt time.Time `json:"enroll_at,omitempty"`
 	// StatusBool holds the value of the "status_bool" field.
@@ -68,7 +70,7 @@ func (*Student) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case student.FieldWeightFloat, student.FieldWeightFloat32:
 			values[i] = new(sql.NullFloat64)
-		case student.FieldID, student.FieldAge, student.FieldAgeInt8, student.FieldAgeUint8, student.FieldAgeInt16, student.FieldAgeUint16, student.FieldAgeInt32, student.FieldAgeUint32, student.FieldAgeInt64, student.FieldAgeUint64, student.FieldAgeInt, student.FieldAgeUint:
+		case student.FieldID, student.FieldAge, student.FieldAgeInt8, student.FieldAgeUint8, student.FieldAgeInt16, student.FieldAgeUint16, student.FieldAgeInt32, student.FieldAgeUint32, student.FieldAgeInt64, student.FieldAgeUint64, student.FieldAgeInt, student.FieldAgeUint, student.FieldTeacherID:
 			values[i] = new(sql.NullInt64)
 		case student.FieldName:
 			values[i] = new(sql.NullString)
@@ -199,6 +201,12 @@ func (s *Student) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				s.ClassID = *value
 			}
+		case student.FieldTeacherID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field teacher_id", values[i])
+			} else if value.Valid {
+				s.TeacherID = uint64(value.Int64)
+			}
 		case student.FieldEnrollAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field enroll_at", values[i])
@@ -297,6 +305,9 @@ func (s *Student) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("class_id=")
 	builder.WriteString(fmt.Sprintf("%v", s.ClassID))
+	builder.WriteString(", ")
+	builder.WriteString("teacher_id=")
+	builder.WriteString(fmt.Sprintf("%v", s.TeacherID))
 	builder.WriteString(", ")
 	builder.WriteString("enroll_at=")
 	builder.WriteString(s.EnrollAt.Format(time.ANSIC))

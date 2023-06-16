@@ -216,6 +216,19 @@ func (su *StudentUpdate) SetClassID(u uuid.UUID) *StudentUpdate {
 	return su
 }
 
+// SetTeacherID sets the "teacher_id" field.
+func (su *StudentUpdate) SetTeacherID(u uint64) *StudentUpdate {
+	su.mutation.ResetTeacherID()
+	su.mutation.SetTeacherID(u)
+	return su
+}
+
+// AddTeacherID adds u to the "teacher_id" field.
+func (su *StudentUpdate) AddTeacherID(u int64) *StudentUpdate {
+	su.mutation.AddTeacherID(u)
+	return su
+}
+
 // SetEnrollAt sets the "enroll_at" field.
 func (su *StudentUpdate) SetEnrollAt(t time.Time) *StudentUpdate {
 	su.mutation.SetEnrollAt(t)
@@ -364,6 +377,12 @@ func (su *StudentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := su.mutation.ClassID(); ok {
 		_spec.SetField(student.FieldClassID, field.TypeUUID, value)
+	}
+	if value, ok := su.mutation.TeacherID(); ok {
+		_spec.SetField(student.FieldTeacherID, field.TypeUint64, value)
+	}
+	if value, ok := su.mutation.AddedTeacherID(); ok {
+		_spec.AddField(student.FieldTeacherID, field.TypeUint64, value)
 	}
 	if value, ok := su.mutation.EnrollAt(); ok {
 		_spec.SetField(student.FieldEnrollAt, field.TypeTime, value)
@@ -578,6 +597,19 @@ func (suo *StudentUpdateOne) SetClassID(u uuid.UUID) *StudentUpdateOne {
 	return suo
 }
 
+// SetTeacherID sets the "teacher_id" field.
+func (suo *StudentUpdateOne) SetTeacherID(u uint64) *StudentUpdateOne {
+	suo.mutation.ResetTeacherID()
+	suo.mutation.SetTeacherID(u)
+	return suo
+}
+
+// AddTeacherID adds u to the "teacher_id" field.
+func (suo *StudentUpdateOne) AddTeacherID(u int64) *StudentUpdateOne {
+	suo.mutation.AddTeacherID(u)
+	return suo
+}
+
 // SetEnrollAt sets the "enroll_at" field.
 func (suo *StudentUpdateOne) SetEnrollAt(t time.Time) *StudentUpdateOne {
 	suo.mutation.SetEnrollAt(t)
@@ -756,6 +788,12 @@ func (suo *StudentUpdateOne) sqlSave(ctx context.Context) (_node *Student, err e
 	}
 	if value, ok := suo.mutation.ClassID(); ok {
 		_spec.SetField(student.FieldClassID, field.TypeUUID, value)
+	}
+	if value, ok := suo.mutation.TeacherID(); ok {
+		_spec.SetField(student.FieldTeacherID, field.TypeUint64, value)
+	}
+	if value, ok := suo.mutation.AddedTeacherID(); ok {
+		_spec.AddField(student.FieldTeacherID, field.TypeUint64, value)
 	}
 	if value, ok := suo.mutation.EnrollAt(); ok {
 		_spec.SetField(student.FieldEnrollAt, field.TypeTime, value)

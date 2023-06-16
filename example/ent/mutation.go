@@ -64,6 +64,8 @@ type StudentMutation struct {
 	weight_float32    *float32
 	addweight_float32 *float32
 	class_id          *uuid.UUID
+	teacher_id        *uint64
+	addteacher_id     *int64
 	enroll_at         *time.Time
 	status_bool       *bool
 	clearedFields     map[string]struct{}
@@ -1048,6 +1050,62 @@ func (m *StudentMutation) ResetClassID() {
 	m.class_id = nil
 }
 
+// SetTeacherID sets the "teacher_id" field.
+func (m *StudentMutation) SetTeacherID(u uint64) {
+	m.teacher_id = &u
+	m.addteacher_id = nil
+}
+
+// TeacherID returns the value of the "teacher_id" field in the mutation.
+func (m *StudentMutation) TeacherID() (r uint64, exists bool) {
+	v := m.teacher_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTeacherID returns the old "teacher_id" field's value of the Student entity.
+// If the Student object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StudentMutation) OldTeacherID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTeacherID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTeacherID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTeacherID: %w", err)
+	}
+	return oldValue.TeacherID, nil
+}
+
+// AddTeacherID adds u to the "teacher_id" field.
+func (m *StudentMutation) AddTeacherID(u int64) {
+	if m.addteacher_id != nil {
+		*m.addteacher_id += u
+	} else {
+		m.addteacher_id = &u
+	}
+}
+
+// AddedTeacherID returns the value that was added to the "teacher_id" field in this mutation.
+func (m *StudentMutation) AddedTeacherID() (r int64, exists bool) {
+	v := m.addteacher_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetTeacherID resets all changes to the "teacher_id" field.
+func (m *StudentMutation) ResetTeacherID() {
+	m.teacher_id = nil
+	m.addteacher_id = nil
+}
+
 // SetEnrollAt sets the "enroll_at" field.
 func (m *StudentMutation) SetEnrollAt(t time.Time) {
 	m.enroll_at = &t
@@ -1154,7 +1212,7 @@ func (m *StudentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *StudentMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 20)
 	if m.created_at != nil {
 		fields = append(fields, student.FieldCreatedAt)
 	}
@@ -1206,6 +1264,9 @@ func (m *StudentMutation) Fields() []string {
 	if m.class_id != nil {
 		fields = append(fields, student.FieldClassID)
 	}
+	if m.teacher_id != nil {
+		fields = append(fields, student.FieldTeacherID)
+	}
 	if m.enroll_at != nil {
 		fields = append(fields, student.FieldEnrollAt)
 	}
@@ -1254,6 +1315,8 @@ func (m *StudentMutation) Field(name string) (ent.Value, bool) {
 		return m.WeightFloat32()
 	case student.FieldClassID:
 		return m.ClassID()
+	case student.FieldTeacherID:
+		return m.TeacherID()
 	case student.FieldEnrollAt:
 		return m.EnrollAt()
 	case student.FieldStatusBool:
@@ -1301,6 +1364,8 @@ func (m *StudentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldWeightFloat32(ctx)
 	case student.FieldClassID:
 		return m.OldClassID(ctx)
+	case student.FieldTeacherID:
+		return m.OldTeacherID(ctx)
 	case student.FieldEnrollAt:
 		return m.OldEnrollAt(ctx)
 	case student.FieldStatusBool:
@@ -1433,6 +1498,13 @@ func (m *StudentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetClassID(v)
 		return nil
+	case student.FieldTeacherID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTeacherID(v)
+		return nil
 	case student.FieldEnrollAt:
 		v, ok := value.(time.Time)
 		if !ok {
@@ -1494,6 +1566,9 @@ func (m *StudentMutation) AddedFields() []string {
 	if m.addweight_float32 != nil {
 		fields = append(fields, student.FieldWeightFloat32)
 	}
+	if m.addteacher_id != nil {
+		fields = append(fields, student.FieldTeacherID)
+	}
 	return fields
 }
 
@@ -1528,6 +1603,8 @@ func (m *StudentMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedWeightFloat()
 	case student.FieldWeightFloat32:
 		return m.AddedWeightFloat32()
+	case student.FieldTeacherID:
+		return m.AddedTeacherID()
 	}
 	return nil, false
 }
@@ -1628,6 +1705,13 @@ func (m *StudentMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddWeightFloat32(v)
 		return nil
+	case student.FieldTeacherID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddTeacherID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Student numeric field %s", name)
 }
@@ -1705,6 +1789,9 @@ func (m *StudentMutation) ResetField(name string) error {
 		return nil
 	case student.FieldClassID:
 		m.ResetClassID()
+		return nil
+	case student.FieldTeacherID:
+		m.ResetTeacherID()
 		return nil
 	case student.FieldEnrollAt:
 		m.ResetEnrollAt()

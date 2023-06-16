@@ -10,6 +10,8 @@ import (
 	"github.com/suyuan32/simple-admin-example-api/internal/utils/dberrorhandler"
 
 	"github.com/suyuan32/simple-admin-common/i18n"
+
+	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,8 +31,8 @@ func NewGetStudentListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetStudentListLogic) GetStudentList(req *types.StudentListReq) (*types.StudentListResp, error) {
 	var predicates []predicate.Student
-	if req.Name != "" {
-		predicates = append(predicates, student.NameContains(req.Name))
+	if req.Name != nil {
+		predicates = append(predicates, student.NameContains(*req.Name))
 	}
 	data, err := l.svcCtx.DB.Student.Query().Where(predicates...).Page(l.ctx, req.Page, req.PageSize)
 
@@ -39,34 +41,35 @@ func (l *GetStudentListLogic) GetStudentList(req *types.StudentListReq) (*types.
 	}
 
 	resp := &types.StudentListResp{}
-	resp.Msg = l.svcCtx.Trans.Trans(l.ctx, i18n.CreateSuccess)
+	resp.Msg = l.svcCtx.Trans.Trans(l.ctx, i18n.Success)
 	resp.Data.Total = data.PageDetails.Total
 
 	for _, v := range data.List {
 		resp.Data.Data = append(resp.Data.Data,
 			types.StudentInfo{
 				BaseIDInfo: types.BaseIDInfo{
-					Id:        v.ID,
-					CreatedAt: v.CreatedAt.UnixMilli(),
-					UpdatedAt: v.UpdatedAt.UnixMilli(),
+					Id:        &v.ID,
+					CreatedAt: pointy.GetPointer(v.CreatedAt.Unix()),
+					UpdatedAt: pointy.GetPointer(v.UpdatedAt.Unix()),
 				},
-				Name:          v.Name,
-				Age:           v.Age,
-				AgeInt8:       v.AgeInt8,
-				AgeUint8:      v.AgeUint8,
-				AgeInt16:      v.AgeInt16,
-				AgeUint16:     v.AgeUint16,
-				AgeInt32:      v.AgeInt32,
-				AgeUint32:     v.AgeUint32,
-				AgeInt64:      v.AgeInt64,
-				AgeUint64:     v.AgeUint64,
-				AgeInt:        v.AgeInt,
-				AgeUint:       v.AgeUint,
-				WeightFloat:   v.WeightFloat,
-				WeightFloat32: v.WeightFloat32,
-				ClassId:       v.ClassID.String(),
-				EnrollAt:      v.EnrollAt.UnixMilli(),
-				StatusBool:    v.StatusBool,
+				Name:          &v.Name,
+				Age:           &v.Age,
+				AgeInt8:       &v.AgeInt8,
+				AgeUint8:      &v.AgeUint8,
+				AgeInt16:      &v.AgeInt16,
+				AgeUint16:     &v.AgeUint16,
+				AgeInt32:      &v.AgeInt32,
+				AgeUint32:     &v.AgeUint32,
+				AgeInt64:      &v.AgeInt64,
+				AgeUint64:     &v.AgeUint64,
+				AgeInt:        &v.AgeInt,
+				AgeUint:       &v.AgeUint,
+				WeightFloat:   &v.WeightFloat,
+				WeightFloat32: &v.WeightFloat32,
+				ClassId:       pointy.GetPointer(v.ClassID.String()),
+				TeacherId:     &v.TeacherID,
+				EnrollAt:      pointy.GetPointer(v.EnrollAt.UnixMilli()),
+				StatusBool:    &v.StatusBool,
 			})
 	}
 

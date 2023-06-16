@@ -30,6 +30,7 @@ func (Student) Fields() []ent.Field {
 		field.Float("weight_float"),
 		field.Float32("weight_float32"),
 		field.UUID("class_id", uuid.UUID{}),
+		field.Uint64("teacher_id"),
 		field.Time("enroll_at"),
 		field.Bool("status_bool"),
 		// field.JSON("info", Info{}),

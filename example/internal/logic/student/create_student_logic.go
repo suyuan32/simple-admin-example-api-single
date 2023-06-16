@@ -11,6 +11,7 @@ import (
 	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/suyuan32/simple-admin-common/utils/uuidx"
 
+	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -30,23 +31,24 @@ func NewCreateStudentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 func (l *CreateStudentLogic) CreateStudent(req *types.StudentInfo) (*types.BaseMsgResp, error) {
 	_, err := l.svcCtx.DB.Student.Create().
-		SetName(req.Name).
-		SetAge(req.Age).
-		SetAgeInt8(req.AgeInt8).
-		SetAgeUint8(req.AgeUint8).
-		SetAgeInt16(req.AgeInt16).
-		SetAgeUint16(req.AgeUint16).
-		SetAgeInt32(req.AgeInt32).
-		SetAgeUint32(req.AgeUint32).
-		SetAgeInt64(req.AgeInt64).
-		SetAgeUint64(req.AgeUint64).
-		SetAgeInt(req.AgeInt).
-		SetAgeUint(req.AgeUint).
-		SetWeightFloat(req.WeightFloat).
-		SetWeightFloat32(req.WeightFloat32).
-		SetClassID(uuidx.ParseUUIDString(req.ClassId)).
-		SetEnrollAt(time.Unix(req.EnrollAt, 0)).
-		SetStatusBool(req.StatusBool).
+		SetNotNilName(req.Name).
+		SetNotNilAge(req.Age).
+		SetNotNilAgeInt8(req.AgeInt8).
+		SetNotNilAgeUint8(req.AgeUint8).
+		SetNotNilAgeInt16(req.AgeInt16).
+		SetNotNilAgeUint16(req.AgeUint16).
+		SetNotNilAgeInt32(req.AgeInt32).
+		SetNotNilAgeUint32(req.AgeUint32).
+		SetNotNilAgeInt64(req.AgeInt64).
+		SetNotNilAgeUint64(req.AgeUint64).
+		SetNotNilAgeInt(req.AgeInt).
+		SetNotNilAgeUint(req.AgeUint).
+		SetNotNilWeightFloat(req.WeightFloat).
+		SetNotNilWeightFloat32(req.WeightFloat32).
+		SetNotNilClassID(uuidx.ParseUUIDStringToPointer(*req.ClassId)).
+		SetNotNilTeacherID(req.TeacherId).
+		SetNotNilEnrollAt(pointy.GetPointer(time.Unix(*req.EnrollAt, 0))).
+		SetNotNilStatusBool(req.StatusBool).
 		Save(l.ctx)
 
 	if err != nil {

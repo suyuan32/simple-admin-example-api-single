@@ -140,6 +140,11 @@ func ClassID(v uuid.UUID) predicate.Student {
 	return predicate.Student(sql.FieldEQ(FieldClassID, v))
 }
 
+// TeacherID applies equality check predicate on the "teacher_id" field. It's identical to TeacherIDEQ.
+func TeacherID(v uint64) predicate.Student {
+	return predicate.Student(sql.FieldEQ(FieldTeacherID, v))
+}
+
 // EnrollAt applies equality check predicate on the "enroll_at" field. It's identical to EnrollAtEQ.
 func EnrollAt(v time.Time) predicate.Student {
 	return predicate.Student(sql.FieldEQ(FieldEnrollAt, v))
@@ -853,6 +858,46 @@ func ClassIDLT(v uuid.UUID) predicate.Student {
 // ClassIDLTE applies the LTE predicate on the "class_id" field.
 func ClassIDLTE(v uuid.UUID) predicate.Student {
 	return predicate.Student(sql.FieldLTE(FieldClassID, v))
+}
+
+// TeacherIDEQ applies the EQ predicate on the "teacher_id" field.
+func TeacherIDEQ(v uint64) predicate.Student {
+	return predicate.Student(sql.FieldEQ(FieldTeacherID, v))
+}
+
+// TeacherIDNEQ applies the NEQ predicate on the "teacher_id" field.
+func TeacherIDNEQ(v uint64) predicate.Student {
+	return predicate.Student(sql.FieldNEQ(FieldTeacherID, v))
+}
+
+// TeacherIDIn applies the In predicate on the "teacher_id" field.
+func TeacherIDIn(vs ...uint64) predicate.Student {
+	return predicate.Student(sql.FieldIn(FieldTeacherID, vs...))
+}
+
+// TeacherIDNotIn applies the NotIn predicate on the "teacher_id" field.
+func TeacherIDNotIn(vs ...uint64) predicate.Student {
+	return predicate.Student(sql.FieldNotIn(FieldTeacherID, vs...))
+}
+
+// TeacherIDGT applies the GT predicate on the "teacher_id" field.
+func TeacherIDGT(v uint64) predicate.Student {
+	return predicate.Student(sql.FieldGT(FieldTeacherID, v))
+}
+
+// TeacherIDGTE applies the GTE predicate on the "teacher_id" field.
+func TeacherIDGTE(v uint64) predicate.Student {
+	return predicate.Student(sql.FieldGTE(FieldTeacherID, v))
+}
+
+// TeacherIDLT applies the LT predicate on the "teacher_id" field.
+func TeacherIDLT(v uint64) predicate.Student {
+	return predicate.Student(sql.FieldLT(FieldTeacherID, v))
+}
+
+// TeacherIDLTE applies the LTE predicate on the "teacher_id" field.
+func TeacherIDLTE(v uint64) predicate.Student {
+	return predicate.Student(sql.FieldLTE(FieldTeacherID, v))
 }
 
 // EnrollAtEQ applies the EQ predicate on the "enroll_at" field.

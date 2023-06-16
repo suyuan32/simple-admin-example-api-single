@@ -28,6 +28,7 @@ var (
 		{Name: "weight_float", Type: field.TypeFloat64},
 		{Name: "weight_float32", Type: field.TypeFloat32},
 		{Name: "class_id", Type: field.TypeUUID},
+		{Name: "teacher_id", Type: field.TypeUint64},
 		{Name: "enroll_at", Type: field.TypeTime},
 		{Name: "status_bool", Type: field.TypeBool},
 	}
