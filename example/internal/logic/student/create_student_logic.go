@@ -2,8 +2,6 @@ package student
 
 import (
 	"context"
-	"time"
-
 	"github.com/suyuan32/simple-admin-example-api/internal/svc"
 	"github.com/suyuan32/simple-admin-example-api/internal/types"
 	"github.com/suyuan32/simple-admin-example-api/internal/utils/dberrorhandler"
@@ -45,9 +43,9 @@ func (l *CreateStudentLogic) CreateStudent(req *types.StudentInfo) (*types.BaseM
 		SetNotNilAgeUint(req.AgeUint).
 		SetNotNilWeightFloat(req.WeightFloat).
 		SetNotNilWeightFloat32(req.WeightFloat32).
-		SetNotNilClassID(uuidx.ParseUUIDStringToPointer(*req.ClassId)).
+		SetNotNilClassID(uuidx.ParseUUIDStringToPointer(req.ClassId)).
 		SetNotNilTeacherID(req.TeacherId).
-		SetNotNilEnrollAt(pointy.GetPointer(time.Unix(*req.EnrollAt, 0))).
+		SetNotNilEnrollAt(pointy.GetTimePointer(req.EnrollAt, 0)).
 		SetNotNilStatusBool(req.StatusBool).
 		Save(l.ctx)
 
