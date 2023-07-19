@@ -1,2 +1,2 @@
 import "base.api"
-import "student.api"
+import "./example/student.api"

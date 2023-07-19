@@ -12,6 +12,8 @@ cd example
 # 整理下依赖 | Optimize Dependencies
 go mod tidy
 
+# 添加 student schema, 直接复制本项目的到本地， 位置在 ./ent/schema | Add student schema, directly copy this project to the local, the location is ./ent/schema
+
 # 生成 Ent 代码 | Generate Ent Code
 make gen-ent
 
