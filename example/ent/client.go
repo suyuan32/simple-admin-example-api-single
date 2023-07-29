@@ -13,7 +13,9 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
-	"github.com/suyuan32/simple-admin-example-api/ent/example"
+	"github.com/suyuan32/simple-admin-example-api/ent/student"
+
+	stdsql "database/sql"
 )
 
 // Client is the client that holds all ent builders.
@@ -21,8 +23,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// Example is the client for interacting with the Example builders.
-	Example *ExampleClient
+	// Student is the client for interacting with the Student builders.
+	Student *StudentClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -36,7 +38,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.Example = NewExampleClient(c.config)
+	c.Student = NewStudentClient(c.config)
 }
 
 type (
@@ -119,7 +121,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:     ctx,
 		config:  cfg,
-		Example: NewExampleClient(cfg),
+		Student: NewStudentClient(cfg),
 	}, nil
 }
 
@@ -139,14 +141,14 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:     ctx,
 		config:  cfg,
-		Example: NewExampleClient(cfg),
+		Student: NewStudentClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Example.
+//		Student.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -168,111 +170,111 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Example.Use(hooks...)
+	c.Student.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.Example.Intercept(interceptors...)
+	c.Student.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
-	case *ExampleMutation:
-		return c.Example.mutate(ctx, m)
+	case *StudentMutation:
+		return c.Student.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
 }
 
-// ExampleClient is a client for the Example schema.
-type ExampleClient struct {
+// StudentClient is a client for the Student schema.
+type StudentClient struct {
 	config
 }
 
-// NewExampleClient returns a client for the Example from the given config.
-func NewExampleClient(c config) *ExampleClient {
-	return &ExampleClient{config: c}
+// NewStudentClient returns a client for the Student from the given config.
+func NewStudentClient(c config) *StudentClient {
+	return &StudentClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `example.Hooks(f(g(h())))`.
-func (c *ExampleClient) Use(hooks ...Hook) {
-	c.hooks.Example = append(c.hooks.Example, hooks...)
+// A call to `Use(f, g, h)` equals to `student.Hooks(f(g(h())))`.
+func (c *StudentClient) Use(hooks ...Hook) {
+	c.hooks.Student = append(c.hooks.Student, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `example.Intercept(f(g(h())))`.
-func (c *ExampleClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Example = append(c.inters.Example, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `student.Intercept(f(g(h())))`.
+func (c *StudentClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Student = append(c.inters.Student, interceptors...)
 }
 
-// Create returns a builder for creating a Example entity.
-func (c *ExampleClient) Create() *ExampleCreate {
-	mutation := newExampleMutation(c.config, OpCreate)
-	return &ExampleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a Student entity.
+func (c *StudentClient) Create() *StudentCreate {
+	mutation := newStudentMutation(c.config, OpCreate)
+	return &StudentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Example entities.
-func (c *ExampleClient) CreateBulk(builders ...*ExampleCreate) *ExampleCreateBulk {
-	return &ExampleCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Student entities.
+func (c *StudentClient) CreateBulk(builders ...*StudentCreate) *StudentCreateBulk {
+	return &StudentCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Example.
-func (c *ExampleClient) Update() *ExampleUpdate {
-	mutation := newExampleMutation(c.config, OpUpdate)
-	return &ExampleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Student.
+func (c *StudentClient) Update() *StudentUpdate {
+	mutation := newStudentMutation(c.config, OpUpdate)
+	return &StudentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ExampleClient) UpdateOne(e *Example) *ExampleUpdateOne {
-	mutation := newExampleMutation(c.config, OpUpdateOne, withExample(e))
-	return &ExampleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *StudentClient) UpdateOne(s *Student) *StudentUpdateOne {
+	mutation := newStudentMutation(c.config, OpUpdateOne, withStudent(s))
+	return &StudentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *ExampleClient) UpdateOneID(id int) *ExampleUpdateOne {
-	mutation := newExampleMutation(c.config, OpUpdateOne, withExampleID(id))
-	return &ExampleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *StudentClient) UpdateOneID(id uint64) *StudentUpdateOne {
+	mutation := newStudentMutation(c.config, OpUpdateOne, withStudentID(id))
+	return &StudentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Example.
-func (c *ExampleClient) Delete() *ExampleDelete {
-	mutation := newExampleMutation(c.config, OpDelete)
-	return &ExampleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Student.
+func (c *StudentClient) Delete() *StudentDelete {
+	mutation := newStudentMutation(c.config, OpDelete)
+	return &StudentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ExampleClient) DeleteOne(e *Example) *ExampleDeleteOne {
-	return c.DeleteOneID(e.ID)
+func (c *StudentClient) DeleteOne(s *Student) *StudentDeleteOne {
+	return c.DeleteOneID(s.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *ExampleClient) DeleteOneID(id int) *ExampleDeleteOne {
-	builder := c.Delete().Where(example.ID(id))
+func (c *StudentClient) DeleteOneID(id uint64) *StudentDeleteOne {
+	builder := c.Delete().Where(student.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &ExampleDeleteOne{builder}
+	return &StudentDeleteOne{builder}
 }
 
-// Query returns a query builder for Example.
-func (c *ExampleClient) Query() *ExampleQuery {
-	return &ExampleQuery{
+// Query returns a query builder for Student.
+func (c *StudentClient) Query() *StudentQuery {
+	return &StudentQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeExample},
+		ctx:    &QueryContext{Type: TypeStudent},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a Example entity by its id.
-func (c *ExampleClient) Get(ctx context.Context, id int) (*Example, error) {
-	return c.Query().Where(example.ID(id)).Only(ctx)
+// Get returns a Student entity by its id.
+func (c *StudentClient) Get(ctx context.Context, id uint64) (*Student, error) {
+	return c.Query().Where(student.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *ExampleClient) GetX(ctx context.Context, id int) *Example {
+func (c *StudentClient) GetX(ctx context.Context, id uint64) *Student {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -281,36 +283,60 @@ func (c *ExampleClient) GetX(ctx context.Context, id int) *Example {
 }
 
 // Hooks returns the client hooks.
-func (c *ExampleClient) Hooks() []Hook {
-	return c.hooks.Example
+func (c *StudentClient) Hooks() []Hook {
+	return c.hooks.Student
 }
 
 // Interceptors returns the client interceptors.
-func (c *ExampleClient) Interceptors() []Interceptor {
-	return c.inters.Example
+func (c *StudentClient) Interceptors() []Interceptor {
+	return c.inters.Student
 }
 
-func (c *ExampleClient) mutate(ctx context.Context, m *ExampleMutation) (Value, error) {
+func (c *StudentClient) mutate(ctx context.Context, m *StudentMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&ExampleCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&StudentCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&ExampleUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&StudentUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&ExampleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&StudentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&ExampleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&StudentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown Example mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown Student mutation op: %q", m.Op())
 	}
 }
 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Example []ent.Hook
+		Student []ent.Hook
 	}
 	inters struct {
-		Example []ent.Interceptor
+		Student []ent.Interceptor
 	}
 )
+
+// ExecContext allows calling the underlying ExecContext method of the driver if it is supported by it.
+// See, database/sql#DB.ExecContext for more information.
+func (c *config) ExecContext(ctx context.Context, query string, args ...any) (stdsql.Result, error) {
+	ex, ok := c.driver.(interface {
+		ExecContext(context.Context, string, ...any) (stdsql.Result, error)
+	})
+	if !ok {
+		return nil, fmt.Errorf("Driver.ExecContext is not supported")
+	}
+	return ex.ExecContext(ctx, query, args...)
+}
+
+// QueryContext allows calling the underlying QueryContext method of the driver if it is supported by it.
+// See, database/sql#DB.QueryContext for more information.
+func (c *config) QueryContext(ctx context.Context, query string, args ...any) (*stdsql.Rows, error) {
+	q, ok := c.driver.(interface {
+		QueryContext(context.Context, string, ...any) (*stdsql.Rows, error)
+	})
+	if !ok {
+		return nil, fmt.Errorf("Driver.QueryContext is not supported")
+	}
+	return q.QueryContext(ctx, query, args...)
+}
