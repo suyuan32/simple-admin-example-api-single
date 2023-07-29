@@ -348,6 +348,7 @@
           "description": "Page number | 第几页",
           "type": "integer",
           "format": "uint64",
+          "minimum": 0,
           "x-go-name": "Page"
         },
         "pageSize": {
@@ -370,18 +371,6 @@
           "format": "int64",
           "x-go-name": "Age"
         },
-        "ageInt": {
-          "description": "AgeInt",
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "AgeInt"
-        },
-        "ageInt16": {
-          "description": "AgeInt16",
-          "type": "integer",
-          "format": "int16",
-          "x-go-name": "AgeInt16"
-        },
         "ageInt32": {
           "description": "AgeInt32",
           "type": "integer",
@@ -394,23 +383,11 @@
           "format": "int64",
           "x-go-name": "AgeInt64"
         },
-        "ageInt8": {
-          "description": "AgeInt8",
-          "type": "integer",
-          "format": "int8",
-          "x-go-name": "AgeInt8"
-        },
         "ageUint": {
           "description": "AgeUint",
           "type": "integer",
           "format": "uint64",
           "x-go-name": "AgeUint"
-        },
-        "ageUint16": {
-          "description": "AgeUint16",
-          "type": "integer",
-          "format": "uint16",
-          "x-go-name": "AgeUint16"
         },
         "ageUint32": {
           "description": "AgeUint32",
@@ -423,12 +400,6 @@
           "type": "integer",
           "format": "uint64",
           "x-go-name": "AgeUint64"
-        },
-        "ageUint8": {
-          "description": "AgeUint8",
-          "type": "integer",
-          "format": "uint8",
-          "x-go-name": "AgeUint8"
         },
         "classId": {
           "description": "ClassId",
@@ -462,12 +433,6 @@
           "description": "StatusBool",
           "type": "boolean",
           "x-go-name": "StatusBool"
-        },
-        "teacherId": {
-          "description": "TeacherId",
-          "type": "integer",
-          "format": "uint64",
-          "x-go-name": "TeacherId"
         },
         "updatedAt": {
           "description": "Update date | 更新日期",
@@ -552,6 +517,7 @@
           "description": "Page number | 第几页",
           "type": "integer",
           "format": "uint64",
+          "minimum": 0,
           "x-go-name": "Page"
         },
         "pageSize": {
@@ -599,6 +565,7 @@
           "description": "ID",
           "type": "string",
           "maxLength": 36,
+          "minLength": 36,
           "x-go-name": "Id"
         }
       },
@@ -621,17 +588,6 @@
         }
       },
       "x-go-package": "github.com/suyuan32/simple-admin-example-api/internal/types"
-    }
-  },
-  "responses": {
-    "SimpleMsg": {
-      "description": "The simplest message | 最简单的信息",
-      "headers": {
-        "msg": {
-          "type": "string",
-          "description": "Message | 信息"
-        }
-      }
     }
   },
   "securityDefinitions": {

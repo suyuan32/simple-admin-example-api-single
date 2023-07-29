@@ -2,6 +2,7 @@ package student
 
 import (
 	"context"
+	"time"
 
 	"github.com/suyuan32/simple-admin-example-api/internal/svc"
 	"github.com/suyuan32/simple-admin-example-api/internal/types"
@@ -31,20 +32,14 @@ func (l *UpdateStudentLogic) UpdateStudent(req *types.StudentInfo) (*types.BaseM
 	err := l.svcCtx.DB.Student.UpdateOneID(*req.Id).
 		SetNotNilName(req.Name).
 		SetNotNilAge(req.Age).
-		SetNotNilAgeInt8(req.AgeInt8).
-		SetNotNilAgeUint8(req.AgeUint8).
-		SetNotNilAgeInt16(req.AgeInt16).
-		SetNotNilAgeUint16(req.AgeUint16).
 		SetNotNilAgeInt32(req.AgeInt32).
-		SetNotNilAgeUint32(req.AgeUint32).
 		SetNotNilAgeInt64(req.AgeInt64).
-		SetNotNilAgeUint64(req.AgeUint64).
-		SetNotNilAgeInt(req.AgeInt).
 		SetNotNilAgeUint(req.AgeUint).
+		SetNotNilAgeUint32(req.AgeUint32).
+		SetNotNilAgeUint64(req.AgeUint64).
 		SetNotNilWeightFloat(req.WeightFloat).
 		SetNotNilWeightFloat32(req.WeightFloat32).
 		SetNotNilClassID(uuidx.ParseUUIDStringToPointer(req.ClassId)).
-		SetNotNilTeacherID(req.TeacherId).
 		SetNotNilEnrollAt(pointy.GetTimePointer(req.EnrollAt, 0)).
 		SetNotNilStatusBool(req.StatusBool).
 		Exec(l.ctx)

@@ -7,13 +7,10 @@ import (
 	"errors"
 	"fmt"
 	"sync"
-	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	uuid "github.com/gofrs/uuid/v5"
 	"github.com/suyuan32/simple-admin-example-api/ent/predicate"
-	"github.com/suyuan32/simple-admin-example-api/ent/student"
 )
 
 const (
@@ -25,66 +22,32 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeStudent = "Student"
+	TypeExample = "Example"
 )
 
-// StudentMutation represents an operation that mutates the Student nodes in the graph.
-type StudentMutation struct {
+// ExampleMutation represents an operation that mutates the Example nodes in the graph.
+type ExampleMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *uint64
-	created_at        *time.Time
-	updated_at        *time.Time
-	name              *string
-	age               *int
-	addage            *int
-	age_int8          *int8
-	addage_int8       *int8
-	age_uint8         *uint8
-	addage_uint8      *int8
-	age_int16         *int16
-	addage_int16      *int16
-	age_uint16        *uint16
-	addage_uint16     *int16
-	age_int32         *int32
-	addage_int32      *int32
-	age_uint32        *uint32
-	addage_uint32     *int32
-	age_int64         *int64
-	addage_int64      *int64
-	age_uint64        *uint64
-	addage_uint64     *int64
-	age_int           *int
-	addage_int        *int
-	age_uint          *uint
-	addage_uint       *int
-	weight_float      *float64
-	addweight_float   *float64
-	weight_float32    *float32
-	addweight_float32 *float32
-	class_id          *uuid.UUID
-	teacher_id        *uint64
-	addteacher_id     *int64
-	enroll_at         *time.Time
-	status_bool       *bool
-	clearedFields     map[string]struct{}
-	done              bool
-	oldValue          func(context.Context) (*Student, error)
-	predicates        []predicate.Student
+	op            Op
+	typ           string
+	id            *int
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Example, error)
+	predicates    []predicate.Example
 }
 
-var _ ent.Mutation = (*StudentMutation)(nil)
+var _ ent.Mutation = (*ExampleMutation)(nil)
 
-// studentOption allows management of the mutation configuration using functional options.
-type studentOption func(*StudentMutation)
+// exampleOption allows management of the mutation configuration using functional options.
+type exampleOption func(*ExampleMutation)
 
-// newStudentMutation creates new mutation for the Student entity.
-func newStudentMutation(c config, op Op, opts ...studentOption) *StudentMutation {
-	m := &StudentMutation{
+// newExampleMutation creates new mutation for the Example entity.
+func newExampleMutation(c config, op Op, opts ...exampleOption) *ExampleMutation {
+	m := &ExampleMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeStudent,
+		typ:           TypeExample,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -93,20 +56,20 @@ func newStudentMutation(c config, op Op, opts ...studentOption) *StudentMutation
 	return m
 }
 
-// withStudentID sets the ID field of the mutation.
-func withStudentID(id uint64) studentOption {
-	return func(m *StudentMutation) {
+// withExampleID sets the ID field of the mutation.
+func withExampleID(id int) exampleOption {
+	return func(m *ExampleMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Student
+			value *Example
 		)
-		m.oldValue = func(ctx context.Context) (*Student, error) {
+		m.oldValue = func(ctx context.Context) (*Example, error) {
 			once.Do(func() {
 				if m.done {
 					err = errors.New("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Student.Get(ctx, id)
+					value, err = m.Client().Example.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -115,10 +78,10 @@ func withStudentID(id uint64) studentOption {
 	}
 }
 
-// withStudent sets the old Student of the mutation.
-func withStudent(node *Student) studentOption {
-	return func(m *StudentMutation) {
-		m.oldValue = func(context.Context) (*Student, error) {
+// withExample sets the old Example of the mutation.
+func withExample(node *Example) exampleOption {
+	return func(m *ExampleMutation) {
+		m.oldValue = func(context.Context) (*Example, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -127,7 +90,7 @@ func withStudent(node *Student) studentOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m StudentMutation) Client() *Client {
+func (m ExampleMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -135,7 +98,7 @@ func (m StudentMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m StudentMutation) Tx() (*Tx, error) {
+func (m ExampleMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, errors.New("ent: mutation is not running in a transaction")
 	}
@@ -144,15 +107,9 @@ func (m StudentMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of Student entities.
-func (m *StudentMutation) SetID(id uint64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *StudentMutation) ID() (id uint64, exists bool) {
+func (m *ExampleMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -163,1030 +120,30 @@ func (m *StudentMutation) ID() (id uint64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *StudentMutation) IDs(ctx context.Context) ([]uint64, error) {
+func (m *ExampleMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uint64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Student.Query().Where(m.predicates...).IDs(ctx)
+		return m.Client().Example.Query().Where(m.predicates...).IDs(ctx)
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (m *StudentMutation) SetCreatedAt(t time.Time) {
-	m.created_at = &t
-}
-
-// CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *StudentMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedAt returns the old "created_at" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
-	}
-	return oldValue.CreatedAt, nil
-}
-
-// ResetCreatedAt resets all changes to the "created_at" field.
-func (m *StudentMutation) ResetCreatedAt() {
-	m.created_at = nil
-}
-
-// SetUpdatedAt sets the "updated_at" field.
-func (m *StudentMutation) SetUpdatedAt(t time.Time) {
-	m.updated_at = &t
-}
-
-// UpdatedAt returns the value of the "updated_at" field in the mutation.
-func (m *StudentMutation) UpdatedAt() (r time.Time, exists bool) {
-	v := m.updated_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdatedAt returns the old "updated_at" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
-	}
-	return oldValue.UpdatedAt, nil
-}
-
-// ResetUpdatedAt resets all changes to the "updated_at" field.
-func (m *StudentMutation) ResetUpdatedAt() {
-	m.updated_at = nil
-}
-
-// SetName sets the "name" field.
-func (m *StudentMutation) SetName(s string) {
-	m.name = &s
-}
-
-// Name returns the value of the "name" field in the mutation.
-func (m *StudentMutation) Name() (r string, exists bool) {
-	v := m.name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldName returns the old "name" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
-	}
-	return oldValue.Name, nil
-}
-
-// ResetName resets all changes to the "name" field.
-func (m *StudentMutation) ResetName() {
-	m.name = nil
-}
-
-// SetAge sets the "age" field.
-func (m *StudentMutation) SetAge(i int) {
-	m.age = &i
-	m.addage = nil
-}
-
-// Age returns the value of the "age" field in the mutation.
-func (m *StudentMutation) Age() (r int, exists bool) {
-	v := m.age
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAge returns the old "age" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAge(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAge is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAge requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAge: %w", err)
-	}
-	return oldValue.Age, nil
-}
-
-// AddAge adds i to the "age" field.
-func (m *StudentMutation) AddAge(i int) {
-	if m.addage != nil {
-		*m.addage += i
-	} else {
-		m.addage = &i
-	}
-}
-
-// AddedAge returns the value that was added to the "age" field in this mutation.
-func (m *StudentMutation) AddedAge() (r int, exists bool) {
-	v := m.addage
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAge resets all changes to the "age" field.
-func (m *StudentMutation) ResetAge() {
-	m.age = nil
-	m.addage = nil
-}
-
-// SetAgeInt8 sets the "age_int8" field.
-func (m *StudentMutation) SetAgeInt8(i int8) {
-	m.age_int8 = &i
-	m.addage_int8 = nil
-}
-
-// AgeInt8 returns the value of the "age_int8" field in the mutation.
-func (m *StudentMutation) AgeInt8() (r int8, exists bool) {
-	v := m.age_int8
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeInt8 returns the old "age_int8" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeInt8(ctx context.Context) (v int8, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeInt8 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeInt8 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeInt8: %w", err)
-	}
-	return oldValue.AgeInt8, nil
-}
-
-// AddAgeInt8 adds i to the "age_int8" field.
-func (m *StudentMutation) AddAgeInt8(i int8) {
-	if m.addage_int8 != nil {
-		*m.addage_int8 += i
-	} else {
-		m.addage_int8 = &i
-	}
-}
-
-// AddedAgeInt8 returns the value that was added to the "age_int8" field in this mutation.
-func (m *StudentMutation) AddedAgeInt8() (r int8, exists bool) {
-	v := m.addage_int8
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeInt8 resets all changes to the "age_int8" field.
-func (m *StudentMutation) ResetAgeInt8() {
-	m.age_int8 = nil
-	m.addage_int8 = nil
-}
-
-// SetAgeUint8 sets the "age_uint8" field.
-func (m *StudentMutation) SetAgeUint8(u uint8) {
-	m.age_uint8 = &u
-	m.addage_uint8 = nil
-}
-
-// AgeUint8 returns the value of the "age_uint8" field in the mutation.
-func (m *StudentMutation) AgeUint8() (r uint8, exists bool) {
-	v := m.age_uint8
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeUint8 returns the old "age_uint8" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeUint8(ctx context.Context) (v uint8, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeUint8 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeUint8 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeUint8: %w", err)
-	}
-	return oldValue.AgeUint8, nil
-}
-
-// AddAgeUint8 adds u to the "age_uint8" field.
-func (m *StudentMutation) AddAgeUint8(u int8) {
-	if m.addage_uint8 != nil {
-		*m.addage_uint8 += u
-	} else {
-		m.addage_uint8 = &u
-	}
-}
-
-// AddedAgeUint8 returns the value that was added to the "age_uint8" field in this mutation.
-func (m *StudentMutation) AddedAgeUint8() (r int8, exists bool) {
-	v := m.addage_uint8
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeUint8 resets all changes to the "age_uint8" field.
-func (m *StudentMutation) ResetAgeUint8() {
-	m.age_uint8 = nil
-	m.addage_uint8 = nil
-}
-
-// SetAgeInt16 sets the "age_int16" field.
-func (m *StudentMutation) SetAgeInt16(i int16) {
-	m.age_int16 = &i
-	m.addage_int16 = nil
-}
-
-// AgeInt16 returns the value of the "age_int16" field in the mutation.
-func (m *StudentMutation) AgeInt16() (r int16, exists bool) {
-	v := m.age_int16
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeInt16 returns the old "age_int16" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeInt16(ctx context.Context) (v int16, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeInt16 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeInt16 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeInt16: %w", err)
-	}
-	return oldValue.AgeInt16, nil
-}
-
-// AddAgeInt16 adds i to the "age_int16" field.
-func (m *StudentMutation) AddAgeInt16(i int16) {
-	if m.addage_int16 != nil {
-		*m.addage_int16 += i
-	} else {
-		m.addage_int16 = &i
-	}
-}
-
-// AddedAgeInt16 returns the value that was added to the "age_int16" field in this mutation.
-func (m *StudentMutation) AddedAgeInt16() (r int16, exists bool) {
-	v := m.addage_int16
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeInt16 resets all changes to the "age_int16" field.
-func (m *StudentMutation) ResetAgeInt16() {
-	m.age_int16 = nil
-	m.addage_int16 = nil
-}
-
-// SetAgeUint16 sets the "age_uint16" field.
-func (m *StudentMutation) SetAgeUint16(u uint16) {
-	m.age_uint16 = &u
-	m.addage_uint16 = nil
-}
-
-// AgeUint16 returns the value of the "age_uint16" field in the mutation.
-func (m *StudentMutation) AgeUint16() (r uint16, exists bool) {
-	v := m.age_uint16
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeUint16 returns the old "age_uint16" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeUint16(ctx context.Context) (v uint16, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeUint16 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeUint16 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeUint16: %w", err)
-	}
-	return oldValue.AgeUint16, nil
-}
-
-// AddAgeUint16 adds u to the "age_uint16" field.
-func (m *StudentMutation) AddAgeUint16(u int16) {
-	if m.addage_uint16 != nil {
-		*m.addage_uint16 += u
-	} else {
-		m.addage_uint16 = &u
-	}
-}
-
-// AddedAgeUint16 returns the value that was added to the "age_uint16" field in this mutation.
-func (m *StudentMutation) AddedAgeUint16() (r int16, exists bool) {
-	v := m.addage_uint16
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeUint16 resets all changes to the "age_uint16" field.
-func (m *StudentMutation) ResetAgeUint16() {
-	m.age_uint16 = nil
-	m.addage_uint16 = nil
-}
-
-// SetAgeInt32 sets the "age_int32" field.
-func (m *StudentMutation) SetAgeInt32(i int32) {
-	m.age_int32 = &i
-	m.addage_int32 = nil
-}
-
-// AgeInt32 returns the value of the "age_int32" field in the mutation.
-func (m *StudentMutation) AgeInt32() (r int32, exists bool) {
-	v := m.age_int32
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeInt32 returns the old "age_int32" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeInt32(ctx context.Context) (v int32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeInt32 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeInt32 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeInt32: %w", err)
-	}
-	return oldValue.AgeInt32, nil
-}
-
-// AddAgeInt32 adds i to the "age_int32" field.
-func (m *StudentMutation) AddAgeInt32(i int32) {
-	if m.addage_int32 != nil {
-		*m.addage_int32 += i
-	} else {
-		m.addage_int32 = &i
-	}
-}
-
-// AddedAgeInt32 returns the value that was added to the "age_int32" field in this mutation.
-func (m *StudentMutation) AddedAgeInt32() (r int32, exists bool) {
-	v := m.addage_int32
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeInt32 resets all changes to the "age_int32" field.
-func (m *StudentMutation) ResetAgeInt32() {
-	m.age_int32 = nil
-	m.addage_int32 = nil
-}
-
-// SetAgeUint32 sets the "age_uint32" field.
-func (m *StudentMutation) SetAgeUint32(u uint32) {
-	m.age_uint32 = &u
-	m.addage_uint32 = nil
-}
-
-// AgeUint32 returns the value of the "age_uint32" field in the mutation.
-func (m *StudentMutation) AgeUint32() (r uint32, exists bool) {
-	v := m.age_uint32
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeUint32 returns the old "age_uint32" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeUint32(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeUint32 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeUint32 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeUint32: %w", err)
-	}
-	return oldValue.AgeUint32, nil
-}
-
-// AddAgeUint32 adds u to the "age_uint32" field.
-func (m *StudentMutation) AddAgeUint32(u int32) {
-	if m.addage_uint32 != nil {
-		*m.addage_uint32 += u
-	} else {
-		m.addage_uint32 = &u
-	}
-}
-
-// AddedAgeUint32 returns the value that was added to the "age_uint32" field in this mutation.
-func (m *StudentMutation) AddedAgeUint32() (r int32, exists bool) {
-	v := m.addage_uint32
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeUint32 resets all changes to the "age_uint32" field.
-func (m *StudentMutation) ResetAgeUint32() {
-	m.age_uint32 = nil
-	m.addage_uint32 = nil
-}
-
-// SetAgeInt64 sets the "age_int64" field.
-func (m *StudentMutation) SetAgeInt64(i int64) {
-	m.age_int64 = &i
-	m.addage_int64 = nil
-}
-
-// AgeInt64 returns the value of the "age_int64" field in the mutation.
-func (m *StudentMutation) AgeInt64() (r int64, exists bool) {
-	v := m.age_int64
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeInt64 returns the old "age_int64" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeInt64(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeInt64 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeInt64 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeInt64: %w", err)
-	}
-	return oldValue.AgeInt64, nil
-}
-
-// AddAgeInt64 adds i to the "age_int64" field.
-func (m *StudentMutation) AddAgeInt64(i int64) {
-	if m.addage_int64 != nil {
-		*m.addage_int64 += i
-	} else {
-		m.addage_int64 = &i
-	}
-}
-
-// AddedAgeInt64 returns the value that was added to the "age_int64" field in this mutation.
-func (m *StudentMutation) AddedAgeInt64() (r int64, exists bool) {
-	v := m.addage_int64
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeInt64 resets all changes to the "age_int64" field.
-func (m *StudentMutation) ResetAgeInt64() {
-	m.age_int64 = nil
-	m.addage_int64 = nil
-}
-
-// SetAgeUint64 sets the "age_uint64" field.
-func (m *StudentMutation) SetAgeUint64(u uint64) {
-	m.age_uint64 = &u
-	m.addage_uint64 = nil
-}
-
-// AgeUint64 returns the value of the "age_uint64" field in the mutation.
-func (m *StudentMutation) AgeUint64() (r uint64, exists bool) {
-	v := m.age_uint64
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeUint64 returns the old "age_uint64" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeUint64(ctx context.Context) (v uint64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeUint64 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeUint64 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeUint64: %w", err)
-	}
-	return oldValue.AgeUint64, nil
-}
-
-// AddAgeUint64 adds u to the "age_uint64" field.
-func (m *StudentMutation) AddAgeUint64(u int64) {
-	if m.addage_uint64 != nil {
-		*m.addage_uint64 += u
-	} else {
-		m.addage_uint64 = &u
-	}
-}
-
-// AddedAgeUint64 returns the value that was added to the "age_uint64" field in this mutation.
-func (m *StudentMutation) AddedAgeUint64() (r int64, exists bool) {
-	v := m.addage_uint64
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeUint64 resets all changes to the "age_uint64" field.
-func (m *StudentMutation) ResetAgeUint64() {
-	m.age_uint64 = nil
-	m.addage_uint64 = nil
-}
-
-// SetAgeInt sets the "age_int" field.
-func (m *StudentMutation) SetAgeInt(i int) {
-	m.age_int = &i
-	m.addage_int = nil
-}
-
-// AgeInt returns the value of the "age_int" field in the mutation.
-func (m *StudentMutation) AgeInt() (r int, exists bool) {
-	v := m.age_int
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeInt returns the old "age_int" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeInt(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeInt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeInt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeInt: %w", err)
-	}
-	return oldValue.AgeInt, nil
-}
-
-// AddAgeInt adds i to the "age_int" field.
-func (m *StudentMutation) AddAgeInt(i int) {
-	if m.addage_int != nil {
-		*m.addage_int += i
-	} else {
-		m.addage_int = &i
-	}
-}
-
-// AddedAgeInt returns the value that was added to the "age_int" field in this mutation.
-func (m *StudentMutation) AddedAgeInt() (r int, exists bool) {
-	v := m.addage_int
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeInt resets all changes to the "age_int" field.
-func (m *StudentMutation) ResetAgeInt() {
-	m.age_int = nil
-	m.addage_int = nil
-}
-
-// SetAgeUint sets the "age_uint" field.
-func (m *StudentMutation) SetAgeUint(u uint) {
-	m.age_uint = &u
-	m.addage_uint = nil
-}
-
-// AgeUint returns the value of the "age_uint" field in the mutation.
-func (m *StudentMutation) AgeUint() (r uint, exists bool) {
-	v := m.age_uint
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAgeUint returns the old "age_uint" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldAgeUint(ctx context.Context) (v uint, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAgeUint is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAgeUint requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAgeUint: %w", err)
-	}
-	return oldValue.AgeUint, nil
-}
-
-// AddAgeUint adds u to the "age_uint" field.
-func (m *StudentMutation) AddAgeUint(u int) {
-	if m.addage_uint != nil {
-		*m.addage_uint += u
-	} else {
-		m.addage_uint = &u
-	}
-}
-
-// AddedAgeUint returns the value that was added to the "age_uint" field in this mutation.
-func (m *StudentMutation) AddedAgeUint() (r int, exists bool) {
-	v := m.addage_uint
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAgeUint resets all changes to the "age_uint" field.
-func (m *StudentMutation) ResetAgeUint() {
-	m.age_uint = nil
-	m.addage_uint = nil
-}
-
-// SetWeightFloat sets the "weight_float" field.
-func (m *StudentMutation) SetWeightFloat(f float64) {
-	m.weight_float = &f
-	m.addweight_float = nil
-}
-
-// WeightFloat returns the value of the "weight_float" field in the mutation.
-func (m *StudentMutation) WeightFloat() (r float64, exists bool) {
-	v := m.weight_float
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldWeightFloat returns the old "weight_float" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldWeightFloat(ctx context.Context) (v float64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldWeightFloat is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldWeightFloat requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldWeightFloat: %w", err)
-	}
-	return oldValue.WeightFloat, nil
-}
-
-// AddWeightFloat adds f to the "weight_float" field.
-func (m *StudentMutation) AddWeightFloat(f float64) {
-	if m.addweight_float != nil {
-		*m.addweight_float += f
-	} else {
-		m.addweight_float = &f
-	}
-}
-
-// AddedWeightFloat returns the value that was added to the "weight_float" field in this mutation.
-func (m *StudentMutation) AddedWeightFloat() (r float64, exists bool) {
-	v := m.addweight_float
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetWeightFloat resets all changes to the "weight_float" field.
-func (m *StudentMutation) ResetWeightFloat() {
-	m.weight_float = nil
-	m.addweight_float = nil
-}
-
-// SetWeightFloat32 sets the "weight_float32" field.
-func (m *StudentMutation) SetWeightFloat32(f float32) {
-	m.weight_float32 = &f
-	m.addweight_float32 = nil
-}
-
-// WeightFloat32 returns the value of the "weight_float32" field in the mutation.
-func (m *StudentMutation) WeightFloat32() (r float32, exists bool) {
-	v := m.weight_float32
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldWeightFloat32 returns the old "weight_float32" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldWeightFloat32(ctx context.Context) (v float32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldWeightFloat32 is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldWeightFloat32 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldWeightFloat32: %w", err)
-	}
-	return oldValue.WeightFloat32, nil
-}
-
-// AddWeightFloat32 adds f to the "weight_float32" field.
-func (m *StudentMutation) AddWeightFloat32(f float32) {
-	if m.addweight_float32 != nil {
-		*m.addweight_float32 += f
-	} else {
-		m.addweight_float32 = &f
-	}
-}
-
-// AddedWeightFloat32 returns the value that was added to the "weight_float32" field in this mutation.
-func (m *StudentMutation) AddedWeightFloat32() (r float32, exists bool) {
-	v := m.addweight_float32
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetWeightFloat32 resets all changes to the "weight_float32" field.
-func (m *StudentMutation) ResetWeightFloat32() {
-	m.weight_float32 = nil
-	m.addweight_float32 = nil
-}
-
-// SetClassID sets the "class_id" field.
-func (m *StudentMutation) SetClassID(u uuid.UUID) {
-	m.class_id = &u
-}
-
-// ClassID returns the value of the "class_id" field in the mutation.
-func (m *StudentMutation) ClassID() (r uuid.UUID, exists bool) {
-	v := m.class_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldClassID returns the old "class_id" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldClassID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldClassID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldClassID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldClassID: %w", err)
-	}
-	return oldValue.ClassID, nil
-}
-
-// ResetClassID resets all changes to the "class_id" field.
-func (m *StudentMutation) ResetClassID() {
-	m.class_id = nil
-}
-
-// SetTeacherID sets the "teacher_id" field.
-func (m *StudentMutation) SetTeacherID(u uint64) {
-	m.teacher_id = &u
-	m.addteacher_id = nil
-}
-
-// TeacherID returns the value of the "teacher_id" field in the mutation.
-func (m *StudentMutation) TeacherID() (r uint64, exists bool) {
-	v := m.teacher_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTeacherID returns the old "teacher_id" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldTeacherID(ctx context.Context) (v uint64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTeacherID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTeacherID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTeacherID: %w", err)
-	}
-	return oldValue.TeacherID, nil
-}
-
-// AddTeacherID adds u to the "teacher_id" field.
-func (m *StudentMutation) AddTeacherID(u int64) {
-	if m.addteacher_id != nil {
-		*m.addteacher_id += u
-	} else {
-		m.addteacher_id = &u
-	}
-}
-
-// AddedTeacherID returns the value that was added to the "teacher_id" field in this mutation.
-func (m *StudentMutation) AddedTeacherID() (r int64, exists bool) {
-	v := m.addteacher_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetTeacherID resets all changes to the "teacher_id" field.
-func (m *StudentMutation) ResetTeacherID() {
-	m.teacher_id = nil
-	m.addteacher_id = nil
-}
-
-// SetEnrollAt sets the "enroll_at" field.
-func (m *StudentMutation) SetEnrollAt(t time.Time) {
-	m.enroll_at = &t
-}
-
-// EnrollAt returns the value of the "enroll_at" field in the mutation.
-func (m *StudentMutation) EnrollAt() (r time.Time, exists bool) {
-	v := m.enroll_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldEnrollAt returns the old "enroll_at" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldEnrollAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldEnrollAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldEnrollAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldEnrollAt: %w", err)
-	}
-	return oldValue.EnrollAt, nil
-}
-
-// ResetEnrollAt resets all changes to the "enroll_at" field.
-func (m *StudentMutation) ResetEnrollAt() {
-	m.enroll_at = nil
-}
-
-// SetStatusBool sets the "status_bool" field.
-func (m *StudentMutation) SetStatusBool(b bool) {
-	m.status_bool = &b
-}
-
-// StatusBool returns the value of the "status_bool" field in the mutation.
-func (m *StudentMutation) StatusBool() (r bool, exists bool) {
-	v := m.status_bool
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldStatusBool returns the old "status_bool" field's value of the Student entity.
-// If the Student object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *StudentMutation) OldStatusBool(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldStatusBool is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldStatusBool requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldStatusBool: %w", err)
-	}
-	return oldValue.StatusBool, nil
-}
-
-// ResetStatusBool resets all changes to the "status_bool" field.
-func (m *StudentMutation) ResetStatusBool() {
-	m.status_bool = nil
-}
-
-// Where appends a list predicates to the StudentMutation builder.
-func (m *StudentMutation) Where(ps ...predicate.Student) {
+// Where appends a list predicates to the ExampleMutation builder.
+func (m *ExampleMutation) Where(ps ...predicate.Example) {
 	m.predicates = append(m.predicates, ps...)
 }
 
-// WhereP appends storage-level predicates to the StudentMutation builder. Using this method,
+// WhereP appends storage-level predicates to the ExampleMutation builder. Using this method,
 // users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *StudentMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Student, len(ps))
+func (m *ExampleMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Example, len(ps))
 	for i := range ps {
 		p[i] = ps[i]
 	}
@@ -1194,659 +151,140 @@ func (m *StudentMutation) WhereP(ps ...func(*sql.Selector)) {
 }
 
 // Op returns the operation name.
-func (m *StudentMutation) Op() Op {
+func (m *ExampleMutation) Op() Op {
 	return m.op
 }
 
 // SetOp allows setting the mutation operation.
-func (m *StudentMutation) SetOp(op Op) {
+func (m *ExampleMutation) SetOp(op Op) {
 	m.op = op
 }
 
-// Type returns the node type of this mutation (Student).
-func (m *StudentMutation) Type() string {
+// Type returns the node type of this mutation (Example).
+func (m *ExampleMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during this mutation. Note that in
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
-func (m *StudentMutation) Fields() []string {
-	fields := make([]string, 0, 20)
-	if m.created_at != nil {
-		fields = append(fields, student.FieldCreatedAt)
-	}
-	if m.updated_at != nil {
-		fields = append(fields, student.FieldUpdatedAt)
-	}
-	if m.name != nil {
-		fields = append(fields, student.FieldName)
-	}
-	if m.age != nil {
-		fields = append(fields, student.FieldAge)
-	}
-	if m.age_int8 != nil {
-		fields = append(fields, student.FieldAgeInt8)
-	}
-	if m.age_uint8 != nil {
-		fields = append(fields, student.FieldAgeUint8)
-	}
-	if m.age_int16 != nil {
-		fields = append(fields, student.FieldAgeInt16)
-	}
-	if m.age_uint16 != nil {
-		fields = append(fields, student.FieldAgeUint16)
-	}
-	if m.age_int32 != nil {
-		fields = append(fields, student.FieldAgeInt32)
-	}
-	if m.age_uint32 != nil {
-		fields = append(fields, student.FieldAgeUint32)
-	}
-	if m.age_int64 != nil {
-		fields = append(fields, student.FieldAgeInt64)
-	}
-	if m.age_uint64 != nil {
-		fields = append(fields, student.FieldAgeUint64)
-	}
-	if m.age_int != nil {
-		fields = append(fields, student.FieldAgeInt)
-	}
-	if m.age_uint != nil {
-		fields = append(fields, student.FieldAgeUint)
-	}
-	if m.weight_float != nil {
-		fields = append(fields, student.FieldWeightFloat)
-	}
-	if m.weight_float32 != nil {
-		fields = append(fields, student.FieldWeightFloat32)
-	}
-	if m.class_id != nil {
-		fields = append(fields, student.FieldClassID)
-	}
-	if m.teacher_id != nil {
-		fields = append(fields, student.FieldTeacherID)
-	}
-	if m.enroll_at != nil {
-		fields = append(fields, student.FieldEnrollAt)
-	}
-	if m.status_bool != nil {
-		fields = append(fields, student.FieldStatusBool)
-	}
+func (m *ExampleMutation) Fields() []string {
+	fields := make([]string, 0, 0)
 	return fields
 }
 
 // Field returns the value of a field with the given name. The second boolean
 // return value indicates that this field was not set, or was not defined in the
 // schema.
-func (m *StudentMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case student.FieldCreatedAt:
-		return m.CreatedAt()
-	case student.FieldUpdatedAt:
-		return m.UpdatedAt()
-	case student.FieldName:
-		return m.Name()
-	case student.FieldAge:
-		return m.Age()
-	case student.FieldAgeInt8:
-		return m.AgeInt8()
-	case student.FieldAgeUint8:
-		return m.AgeUint8()
-	case student.FieldAgeInt16:
-		return m.AgeInt16()
-	case student.FieldAgeUint16:
-		return m.AgeUint16()
-	case student.FieldAgeInt32:
-		return m.AgeInt32()
-	case student.FieldAgeUint32:
-		return m.AgeUint32()
-	case student.FieldAgeInt64:
-		return m.AgeInt64()
-	case student.FieldAgeUint64:
-		return m.AgeUint64()
-	case student.FieldAgeInt:
-		return m.AgeInt()
-	case student.FieldAgeUint:
-		return m.AgeUint()
-	case student.FieldWeightFloat:
-		return m.WeightFloat()
-	case student.FieldWeightFloat32:
-		return m.WeightFloat32()
-	case student.FieldClassID:
-		return m.ClassID()
-	case student.FieldTeacherID:
-		return m.TeacherID()
-	case student.FieldEnrollAt:
-		return m.EnrollAt()
-	case student.FieldStatusBool:
-		return m.StatusBool()
-	}
+func (m *ExampleMutation) Field(name string) (ent.Value, bool) {
 	return nil, false
 }
 
 // OldField returns the old value of the field from the database. An error is
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
-func (m *StudentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case student.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
-	case student.FieldUpdatedAt:
-		return m.OldUpdatedAt(ctx)
-	case student.FieldName:
-		return m.OldName(ctx)
-	case student.FieldAge:
-		return m.OldAge(ctx)
-	case student.FieldAgeInt8:
-		return m.OldAgeInt8(ctx)
-	case student.FieldAgeUint8:
-		return m.OldAgeUint8(ctx)
-	case student.FieldAgeInt16:
-		return m.OldAgeInt16(ctx)
-	case student.FieldAgeUint16:
-		return m.OldAgeUint16(ctx)
-	case student.FieldAgeInt32:
-		return m.OldAgeInt32(ctx)
-	case student.FieldAgeUint32:
-		return m.OldAgeUint32(ctx)
-	case student.FieldAgeInt64:
-		return m.OldAgeInt64(ctx)
-	case student.FieldAgeUint64:
-		return m.OldAgeUint64(ctx)
-	case student.FieldAgeInt:
-		return m.OldAgeInt(ctx)
-	case student.FieldAgeUint:
-		return m.OldAgeUint(ctx)
-	case student.FieldWeightFloat:
-		return m.OldWeightFloat(ctx)
-	case student.FieldWeightFloat32:
-		return m.OldWeightFloat32(ctx)
-	case student.FieldClassID:
-		return m.OldClassID(ctx)
-	case student.FieldTeacherID:
-		return m.OldTeacherID(ctx)
-	case student.FieldEnrollAt:
-		return m.OldEnrollAt(ctx)
-	case student.FieldStatusBool:
-		return m.OldStatusBool(ctx)
-	}
-	return nil, fmt.Errorf("unknown Student field %s", name)
+func (m *ExampleMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Example field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *StudentMutation) SetField(name string, value ent.Value) error {
+func (m *ExampleMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case student.FieldCreatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedAt(v)
-		return nil
-	case student.FieldUpdatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdatedAt(v)
-		return nil
-	case student.FieldName:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetName(v)
-		return nil
-	case student.FieldAge:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAge(v)
-		return nil
-	case student.FieldAgeInt8:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeInt8(v)
-		return nil
-	case student.FieldAgeUint8:
-		v, ok := value.(uint8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeUint8(v)
-		return nil
-	case student.FieldAgeInt16:
-		v, ok := value.(int16)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeInt16(v)
-		return nil
-	case student.FieldAgeUint16:
-		v, ok := value.(uint16)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeUint16(v)
-		return nil
-	case student.FieldAgeInt32:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeInt32(v)
-		return nil
-	case student.FieldAgeUint32:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeUint32(v)
-		return nil
-	case student.FieldAgeInt64:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeInt64(v)
-		return nil
-	case student.FieldAgeUint64:
-		v, ok := value.(uint64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeUint64(v)
-		return nil
-	case student.FieldAgeInt:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeInt(v)
-		return nil
-	case student.FieldAgeUint:
-		v, ok := value.(uint)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAgeUint(v)
-		return nil
-	case student.FieldWeightFloat:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetWeightFloat(v)
-		return nil
-	case student.FieldWeightFloat32:
-		v, ok := value.(float32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetWeightFloat32(v)
-		return nil
-	case student.FieldClassID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetClassID(v)
-		return nil
-	case student.FieldTeacherID:
-		v, ok := value.(uint64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTeacherID(v)
-		return nil
-	case student.FieldEnrollAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetEnrollAt(v)
-		return nil
-	case student.FieldStatusBool:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetStatusBool(v)
-		return nil
 	}
-	return fmt.Errorf("unknown Student field %s", name)
+	return fmt.Errorf("unknown Example field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
-func (m *StudentMutation) AddedFields() []string {
-	var fields []string
-	if m.addage != nil {
-		fields = append(fields, student.FieldAge)
-	}
-	if m.addage_int8 != nil {
-		fields = append(fields, student.FieldAgeInt8)
-	}
-	if m.addage_uint8 != nil {
-		fields = append(fields, student.FieldAgeUint8)
-	}
-	if m.addage_int16 != nil {
-		fields = append(fields, student.FieldAgeInt16)
-	}
-	if m.addage_uint16 != nil {
-		fields = append(fields, student.FieldAgeUint16)
-	}
-	if m.addage_int32 != nil {
-		fields = append(fields, student.FieldAgeInt32)
-	}
-	if m.addage_uint32 != nil {
-		fields = append(fields, student.FieldAgeUint32)
-	}
-	if m.addage_int64 != nil {
-		fields = append(fields, student.FieldAgeInt64)
-	}
-	if m.addage_uint64 != nil {
-		fields = append(fields, student.FieldAgeUint64)
-	}
-	if m.addage_int != nil {
-		fields = append(fields, student.FieldAgeInt)
-	}
-	if m.addage_uint != nil {
-		fields = append(fields, student.FieldAgeUint)
-	}
-	if m.addweight_float != nil {
-		fields = append(fields, student.FieldWeightFloat)
-	}
-	if m.addweight_float32 != nil {
-		fields = append(fields, student.FieldWeightFloat32)
-	}
-	if m.addteacher_id != nil {
-		fields = append(fields, student.FieldTeacherID)
-	}
-	return fields
+func (m *ExampleMutation) AddedFields() []string {
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
-func (m *StudentMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case student.FieldAge:
-		return m.AddedAge()
-	case student.FieldAgeInt8:
-		return m.AddedAgeInt8()
-	case student.FieldAgeUint8:
-		return m.AddedAgeUint8()
-	case student.FieldAgeInt16:
-		return m.AddedAgeInt16()
-	case student.FieldAgeUint16:
-		return m.AddedAgeUint16()
-	case student.FieldAgeInt32:
-		return m.AddedAgeInt32()
-	case student.FieldAgeUint32:
-		return m.AddedAgeUint32()
-	case student.FieldAgeInt64:
-		return m.AddedAgeInt64()
-	case student.FieldAgeUint64:
-		return m.AddedAgeUint64()
-	case student.FieldAgeInt:
-		return m.AddedAgeInt()
-	case student.FieldAgeUint:
-		return m.AddedAgeUint()
-	case student.FieldWeightFloat:
-		return m.AddedWeightFloat()
-	case student.FieldWeightFloat32:
-		return m.AddedWeightFloat32()
-	case student.FieldTeacherID:
-		return m.AddedTeacherID()
-	}
+func (m *ExampleMutation) AddedField(name string) (ent.Value, bool) {
 	return nil, false
 }
 
 // AddField adds the value to the field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *StudentMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	case student.FieldAge:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAge(v)
-		return nil
-	case student.FieldAgeInt8:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeInt8(v)
-		return nil
-	case student.FieldAgeUint8:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeUint8(v)
-		return nil
-	case student.FieldAgeInt16:
-		v, ok := value.(int16)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeInt16(v)
-		return nil
-	case student.FieldAgeUint16:
-		v, ok := value.(int16)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeUint16(v)
-		return nil
-	case student.FieldAgeInt32:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeInt32(v)
-		return nil
-	case student.FieldAgeUint32:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeUint32(v)
-		return nil
-	case student.FieldAgeInt64:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeInt64(v)
-		return nil
-	case student.FieldAgeUint64:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeUint64(v)
-		return nil
-	case student.FieldAgeInt:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeInt(v)
-		return nil
-	case student.FieldAgeUint:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAgeUint(v)
-		return nil
-	case student.FieldWeightFloat:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddWeightFloat(v)
-		return nil
-	case student.FieldWeightFloat32:
-		v, ok := value.(float32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddWeightFloat32(v)
-		return nil
-	case student.FieldTeacherID:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddTeacherID(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Student numeric field %s", name)
+func (m *ExampleMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Example numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
-func (m *StudentMutation) ClearedFields() []string {
+func (m *ExampleMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
 // cleared in this mutation.
-func (m *StudentMutation) FieldCleared(name string) bool {
+func (m *ExampleMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *StudentMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Student nullable field %s", name)
+func (m *ExampleMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Example nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
-func (m *StudentMutation) ResetField(name string) error {
-	switch name {
-	case student.FieldCreatedAt:
-		m.ResetCreatedAt()
-		return nil
-	case student.FieldUpdatedAt:
-		m.ResetUpdatedAt()
-		return nil
-	case student.FieldName:
-		m.ResetName()
-		return nil
-	case student.FieldAge:
-		m.ResetAge()
-		return nil
-	case student.FieldAgeInt8:
-		m.ResetAgeInt8()
-		return nil
-	case student.FieldAgeUint8:
-		m.ResetAgeUint8()
-		return nil
-	case student.FieldAgeInt16:
-		m.ResetAgeInt16()
-		return nil
-	case student.FieldAgeUint16:
-		m.ResetAgeUint16()
-		return nil
-	case student.FieldAgeInt32:
-		m.ResetAgeInt32()
-		return nil
-	case student.FieldAgeUint32:
-		m.ResetAgeUint32()
-		return nil
-	case student.FieldAgeInt64:
-		m.ResetAgeInt64()
-		return nil
-	case student.FieldAgeUint64:
-		m.ResetAgeUint64()
-		return nil
-	case student.FieldAgeInt:
-		m.ResetAgeInt()
-		return nil
-	case student.FieldAgeUint:
-		m.ResetAgeUint()
-		return nil
-	case student.FieldWeightFloat:
-		m.ResetWeightFloat()
-		return nil
-	case student.FieldWeightFloat32:
-		m.ResetWeightFloat32()
-		return nil
-	case student.FieldClassID:
-		m.ResetClassID()
-		return nil
-	case student.FieldTeacherID:
-		m.ResetTeacherID()
-		return nil
-	case student.FieldEnrollAt:
-		m.ResetEnrollAt()
-		return nil
-	case student.FieldStatusBool:
-		m.ResetStatusBool()
-		return nil
-	}
-	return fmt.Errorf("unknown Student field %s", name)
+func (m *ExampleMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Example field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
-func (m *StudentMutation) AddedEdges() []string {
+func (m *ExampleMutation) AddedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
-func (m *StudentMutation) AddedIDs(name string) []ent.Value {
+func (m *ExampleMutation) AddedIDs(name string) []ent.Value {
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
-func (m *StudentMutation) RemovedEdges() []string {
+func (m *ExampleMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
-func (m *StudentMutation) RemovedIDs(name string) []ent.Value {
+func (m *ExampleMutation) RemovedIDs(name string) []ent.Value {
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *StudentMutation) ClearedEdges() []string {
+func (m *ExampleMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
-func (m *StudentMutation) EdgeCleared(name string) bool {
+func (m *ExampleMutation) EdgeCleared(name string) bool {
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
-func (m *StudentMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown Student unique edge %s", name)
+func (m *ExampleMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Example unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
-func (m *StudentMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown Student edge %s", name)
+func (m *ExampleMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Example edge %s", name)
 }

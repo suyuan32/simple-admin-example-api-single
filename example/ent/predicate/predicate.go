@@ -6,5 +6,5 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Student is the predicate function for student builders.
-type Student func(*sql.Selector)
+// Example is the predicate function for example builders.
+type Example func(*sql.Selector)

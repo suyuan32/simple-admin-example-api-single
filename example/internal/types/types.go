@@ -30,23 +30,17 @@ type BaseMsgResp struct {
 	Msg string `json:"msg"`
 }
 
-// The simplest message | 最简单的信息
-// swagger:response SimpleMsg
-type SimpleMsg struct {
-	// Message | 信息
-	Msg string `json:"msg"`
-}
-
 // The page request parameters | 列表请求参数
 // swagger:model PageInfo
 type PageInfo struct {
 	// Page number | 第几页
-	// Required: true
-	Page uint64 `json:"page" validate:"number"`
+	// required : true
+	// min : 0
+	Page uint64 `json:"page" validate:"required,number,gt=0"`
 	// Page size | 单页数据行数
-	// Required: true
-	// Maximum: 100000
-	PageSize uint64 `json:"pageSize" validate:"number,max=100000"`
+	// required : true
+	// max : 100000
+	PageSize uint64 `json:"pageSize" validate:"required,number,lt=100000"`
 }
 
 // Basic ID request | 基础ID参数请求
@@ -77,9 +71,10 @@ type IDPathReq struct {
 // swagger:model UUIDReq
 type UUIDReq struct {
 	// ID
-	// Required: true
-	// Max length: 36
-	Id string `json:"id" validate:"len=36"`
+	// required : true
+	// max length : 36
+	// min length : 36
+	Id string `json:"id" validate:"required,len=36"`
 }
 
 // Basic UUID array request | 基础UUID数组参数请求
@@ -94,7 +89,7 @@ type UUIDsReq struct {
 // swagger:model BaseIDInfo
 type BaseIDInfo struct {
 	// ID
-	Id *uint64 `json:"id"`
+	Id *uint64 `json:"id,optional"`
 	// Create date | 创建日期
 	CreatedAt *int64 `json:"createdAt,optional"`
 	// Update date | 更新日期
@@ -105,7 +100,7 @@ type BaseIDInfo struct {
 // swagger:model BaseUUIDInfo
 type BaseUUIDInfo struct {
 	// ID
-	Id *string `json:"id"`
+	Id *string `json:"id,optional"`
 	// Create date | 创建日期
 	CreatedAt *int64 `json:"createdAt,optional"`
 	// Update date | 更新日期
@@ -120,34 +115,22 @@ type StudentInfo struct {
 	Name *string `json:"name,optional"`
 	// Age
 	Age *int `json:"age,optional"`
-	// AgeInt8
-	AgeInt8 *int8 `json:"ageInt8,optional"`
-	// AgeUint8
-	AgeUint8 *uint8 `json:"ageUint8,optional"`
-	// AgeInt16
-	AgeInt16 *int16 `json:"ageInt16,optional"`
-	// AgeUint16
-	AgeUint16 *uint16 `json:"ageUint16,optional"`
 	// AgeInt32
 	AgeInt32 *int32 `json:"ageInt32,optional"`
-	// AgeUint32
-	AgeUint32 *uint32 `json:"ageUint32,optional"`
 	// AgeInt64
 	AgeInt64 *int64 `json:"ageInt64,optional"`
-	// AgeUint64
-	AgeUint64 *uint64 `json:"ageUint64,optional"`
-	// AgeInt
-	AgeInt *int `json:"ageInt,optional"`
 	// AgeUint
 	AgeUint *uint `json:"ageUint,optional"`
+	// AgeUint32
+	AgeUint32 *uint32 `json:"ageUint32,optional"`
+	// AgeUint64
+	AgeUint64 *uint64 `json:"ageUint64,optional"`
 	// WeightFloat
 	WeightFloat *float64 `json:"weightFloat,optional"`
 	// WeightFloat32
 	WeightFloat32 *float32 `json:"weightFloat32,optional"`
 	// ClassId
 	ClassId *string `json:"classId,optional"`
-	// TeacherId
-	TeacherId *uint64 `json:"teacherId,optional"`
 	// EnrollAt
 	EnrollAt *int64 `json:"enrollAt,optional"`
 	// StatusBool

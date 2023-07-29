@@ -10,6 +10,7 @@ import (
 type Config struct {
 	rest.RestConf
 	Auth         rest.AuthConf
+	CROSConf     config.CROSConf
 	DatabaseConf config.DatabaseConf
 	RedisConf    redis.RedisConf
 	CasbinConf   casbin.CasbinConf
