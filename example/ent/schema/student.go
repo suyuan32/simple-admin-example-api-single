@@ -15,7 +15,7 @@ type Student struct {
 // Fields of the Student.
 func (Student) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name"),
+		field.String("name").Comment("名称"),
 		field.Int("age"),
 		field.Int32("age_int32"),
 		field.Int64("age_int64"),

@@ -5,40 +5,40 @@ type (
     StudentInfo {
         BaseIDInfo
 
-        // Name
+        // 名称 
         Name  *string `json:"name,optional"`
 
-        // Age
+        // Age 
         Age  *int `json:"age,optional"`
 
-        // AgeInt32
+        // AgeInt32 
         AgeInt32  *int32 `json:"ageInt32,optional"`
 
-        // AgeInt64
+        // AgeInt64 
         AgeInt64  *int64 `json:"ageInt64,optional"`
 
-        // AgeUint
+        // AgeUint 
         AgeUint  *uint `json:"ageUint,optional"`
 
-        // AgeUint32
+        // AgeUint32 
         AgeUint32  *uint32 `json:"ageUint32,optional"`
 
-        // AgeUint64
+        // AgeUint64 
         AgeUint64  *uint64 `json:"ageUint64,optional"`
 
-        // WeightFloat
+        // WeightFloat 
         WeightFloat  *float64 `json:"weightFloat,optional"`
 
-        // WeightFloat32
+        // WeightFloat32 
         WeightFloat32  *float32 `json:"weightFloat32,optional"`
 
-        // ClassId
+        // ClassId 
         ClassId  *string `json:"classId,optional"`
 
-        // EnrollAt
+        // EnrollAt 
         EnrollAt  *int64 `json:"enrollAt,optional"`
 
-        // StatusBool
+        // StatusBool 
         StatusBool  *bool `json:"statusBool,optional"`
     }
 
@@ -62,7 +62,7 @@ type (
     StudentListReq {
         PageInfo
 
-        // Name
+        // 名称 
         Name  *string `json:"name,optional"`
     }
 

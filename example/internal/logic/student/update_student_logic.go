@@ -7,7 +7,6 @@ import (
 	"github.com/suyuan32/simple-admin-example-api/internal/utils/dberrorhandler"
 
 	"github.com/suyuan32/simple-admin-common/i18n"
-	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/suyuan32/simple-admin-common/utils/uuidx"
 	"github.com/zeromicro/go-zero/core/logx"
 )

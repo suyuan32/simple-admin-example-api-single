@@ -310,11 +310,15 @@ func (sc *StudentCreate) createSpec() (*Student, *sqlgraph.CreateSpec) {
 // StudentCreateBulk is the builder for creating many Student entities in bulk.
 type StudentCreateBulk struct {
 	config
+	err      error
 	builders []*StudentCreate
 }
 
 // Save creates the Student entities in the database.
 func (scb *StudentCreateBulk) Save(ctx context.Context) ([]*Student, error) {
+	if scb.err != nil {
+		return nil, scb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(scb.builders))
 	nodes := make([]*Student, len(scb.builders))
 	mutators := make([]Mutator, len(scb.builders))

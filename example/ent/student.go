@@ -18,11 +18,11 @@ type Student struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uint64 `json:"id,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
+	// Create Time | 创建日期
 	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
+	// Update Time | 修改日期
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// Name holds the value of the "name" field.
+	// 名称
 	Name string `json:"name,omitempty"`
 	// Age holds the value of the "age" field.
 	Age int `json:"age,omitempty"`

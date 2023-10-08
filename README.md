@@ -1,4 +1,4 @@
-# simple-admin-example-api-single v1.1.0 gen by tools v1.5.16
+# simple-admin-example-api-single v1.1.0 gen by tools v1.6.4
 Simple Admin 单体API 服务例子。Simple Admin single API service example.
 
 # 生成命令 | Command

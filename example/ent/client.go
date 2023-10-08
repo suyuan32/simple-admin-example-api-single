@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"reflect"
 
 	"github.com/suyuan32/simple-admin-example-api/ent/migrate"
 
@@ -106,11 +107,14 @@ func Open(driverName, dataSourceName string, options ...Option) (*Client, error)
 	}
 }
 
+// ErrTxStarted is returned when trying to start a new transaction from a transactional client.
+var ErrTxStarted = errors.New("ent: cannot start a transaction within a transaction")
+
 // Tx returns a new transactional client. The provided context
 // is used until the transaction is committed or rolled back.
 func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	if _, ok := c.driver.(*txDriver); ok {
-		return nil, errors.New("ent: cannot start a transaction within a transaction")
+		return nil, ErrTxStarted
 	}
 	tx, err := newTx(ctx, c.driver)
 	if err != nil {
@@ -219,6 +223,21 @@ func (c *StudentClient) Create() *StudentCreate {
 
 // CreateBulk returns a builder for creating a bulk of Student entities.
 func (c *StudentClient) CreateBulk(builders ...*StudentCreate) *StudentCreateBulk {
+	return &StudentCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *StudentClient) MapCreateBulk(slice any, setFunc func(*StudentCreate, int)) *StudentCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &StudentCreateBulk{err: fmt.Errorf("calling to StudentClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*StudentCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
 	return &StudentCreateBulk{config: c.config, builders: builders}
 }
 
