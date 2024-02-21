@@ -2,26 +2,29 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/casbin/casbin/v2"
+	"github.com/redis/go-redis/v9"
 	"github.com/zeromicro/go-zero/core/errorx"
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest/httpx"
 
+	"github.com/suyuan32/simple-admin-common/config"
 	"github.com/suyuan32/simple-admin-common/enum/errorcode"
 	"github.com/suyuan32/simple-admin-common/i18n"
+	"github.com/suyuan32/simple-admin-common/utils/jwt"
 )
 
 type AuthorityMiddleware struct {
 	Cbn   *casbin.Enforcer
-	Rds   *redis.Redis
+	Rds   redis.UniversalClient
 	Trans *i18n.Translator
 }
 
-func NewAuthorityMiddleware(cbn *casbin.Enforcer, rds *redis.Redis, trans *i18n.Translator) *AuthorityMiddleware {
+func NewAuthorityMiddleware(cbn *casbin.Enforcer, rds redis.UniversalClient, trans *i18n.Translator) *AuthorityMiddleware {
 	return &AuthorityMiddleware{
 		Cbn:   cbn,
 		Rds:   rds,
@@ -39,8 +42,8 @@ func (m *AuthorityMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		roleIds := r.Context().Value("roleId").(string)
 
 		// check jwt blacklist
-		jwtResult, err := m.Rds.Get("token_" + r.Header.Get("Authorization"))
-		if err != nil {
+		jwtResult, err := m.Rds.Get(context.Background(), config.RedisTokenPrefix+jwt.StripBearerPrefixFromToken(r.Header.Get("Authorization"))).Result()
+		if err != nil && !errors.Is(err, redis.Nil) {
 			logx.Errorw("redis error in jwt", logx.Field("detail", err.Error()))
 			httpx.Error(w, errorx.NewApiError(http.StatusInternalServerError, err.Error()))
 			return

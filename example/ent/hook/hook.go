@@ -9,16 +9,16 @@ import (
 	"github.com/suyuan32/simple-admin-example-api/ent"
 )
 
-// The StudentFunc type is an adapter to allow the use of ordinary
-// function as Student mutator.
-type StudentFunc func(context.Context, *ent.StudentMutation) (ent.Value, error)
+// The ExampleFunc type is an adapter to allow the use of ordinary
+// function as Example mutator.
+type ExampleFunc func(context.Context, *ent.ExampleMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f StudentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.StudentMutation); ok {
+func (f ExampleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ExampleMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StudentMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ExampleMutation", m)
 }
 
 // Condition is a hook condition function.

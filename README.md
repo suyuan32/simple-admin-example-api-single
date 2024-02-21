@@ -1,10 +1,11 @@
-# simple-admin-example-api-single v1.1.0 gen by tools v1.6.4
-Simple Admin 单体API 服务例子。Simple Admin single API service example.
+# simple-admin-example-api-single v1.6.27 gen by tools v1.6.27
+
+Simple Admin 单体 API 服务例子。Simple Admin single API service example.
 
 # 生成命令 | Command
 
 ```shell
-goctls api new example -i -c -a -m github.com/suyuan32/simple-admin-example-api -p 8081 -g -e
+goctls api new example -i -c -a -m github.com/suyuan32/simple-admin-example-api -p 8081 -e -r
 
 cd example
 # 修改 ent/schema/example 为 student | Modify ent/schema/example to student

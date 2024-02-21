@@ -67,6 +67,14 @@ type IDPathReq struct {
 	Id uint64 `path:"id"`
 }
 
+// Basic UUID request in path | 基础UUID地址参数请求
+// swagger:model UUIDPathReq
+type UUIDPathReq struct {
+	// ID
+	// Required: true
+	Id string `path:"id"`
+}
+
 // Basic UUID request | 基础UUID参数请求
 // swagger:model UUIDReq
 type UUIDReq struct {
@@ -110,31 +118,13 @@ type BaseUUIDInfo struct {
 // The response data of student information | Student信息
 // swagger:model StudentInfo
 type StudentInfo struct {
-	BaseIDInfo
-	// Name
+	BaseUUIDInfo
+	// Student name | 学生姓名
 	Name *string `json:"name,optional"`
-	// Age
-	Age *int `json:"age,optional"`
-	// AgeInt32
-	AgeInt32 *int32 `json:"ageInt32,optional"`
-	// AgeInt64
-	AgeInt64 *int64 `json:"ageInt64,optional"`
-	// AgeUint
-	AgeUint *uint `json:"ageUint,optional"`
-	// AgeUint32
-	AgeUint32 *uint32 `json:"ageUint32,optional"`
-	// AgeUint64
-	AgeUint64 *uint64 `json:"ageUint64,optional"`
-	// WeightFloat
-	WeightFloat *float64 `json:"weightFloat,optional"`
-	// WeightFloat32
-	WeightFloat32 *float32 `json:"weightFloat32,optional"`
-	// ClassId
-	ClassId *string `json:"classId,optional"`
-	// EnrollAt
-	EnrollAt *int64 `json:"enrollAt,optional"`
-	// StatusBool
-	StatusBool *bool `json:"statusBool,optional"`
+	// Student age | 学生年龄
+	Age *int16 `json:"age,optional"`
+	// Student's home address | 学生家庭住址
+	Address *string `json:"address,optional"`
 }
 
 // The response data of student list | Student列表数据
@@ -157,8 +147,10 @@ type StudentListInfo struct {
 // swagger:model StudentListReq
 type StudentListReq struct {
 	PageInfo
-	// Name
+	// Student name | 学生姓名
 	Name *string `json:"name,optional"`
+	// Student's home address | 学生家庭住址
+	Address *string `json:"address,optional"`
 }
 
 // Student information response | Student信息返回体

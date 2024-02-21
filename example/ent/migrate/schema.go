@@ -8,33 +8,19 @@ import (
 )
 
 var (
-	// StudentsColumns holds the columns for the "students" table.
-	StudentsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUint64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Comment: "Create Time | 创建日期"},
-		{Name: "updated_at", Type: field.TypeTime, Comment: "Update Time | 修改日期"},
-		{Name: "name", Type: field.TypeString},
-		{Name: "age", Type: field.TypeInt},
-		{Name: "age_int32", Type: field.TypeInt32},
-		{Name: "age_int64", Type: field.TypeInt64},
-		{Name: "age_uint", Type: field.TypeUint},
-		{Name: "age_uint32", Type: field.TypeUint32},
-		{Name: "age_uint64", Type: field.TypeUint64},
-		{Name: "weight_float", Type: field.TypeFloat64},
-		{Name: "weight_float32", Type: field.TypeFloat32},
-		{Name: "class_id", Type: field.TypeUUID},
-		{Name: "enroll_at", Type: field.TypeTime},
-		{Name: "status_bool", Type: field.TypeBool},
+	// ExamplesColumns holds the columns for the "examples" table.
+	ExamplesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
 	}
-	// StudentsTable holds the schema information for the "students" table.
-	StudentsTable = &schema.Table{
-		Name:       "students",
-		Columns:    StudentsColumns,
-		PrimaryKey: []*schema.Column{StudentsColumns[0]},
+	// ExamplesTable holds the schema information for the "examples" table.
+	ExamplesTable = &schema.Table{
+		Name:       "examples",
+		Columns:    ExamplesColumns,
+		PrimaryKey: []*schema.Column{ExamplesColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		StudentsTable,
+		ExamplesTable,
 	}
 )
 

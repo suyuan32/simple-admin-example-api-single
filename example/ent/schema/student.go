@@ -2,37 +2,31 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/field"
-	"github.com/gofrs/uuid/v5"
 	"github.com/suyuan32/simple-admin-common/orm/ent/mixins"
 )
 
-// Student holds the schema definition for the Student entity.
 type Student struct {
 	ent.Schema
 }
 
-// Fields of the Student.
 func (Student) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Comment("名称"),
-		field.Int("age"),
-		field.Int32("age_int32"),
-		field.Int64("age_int64"),
-		field.Uint("age_uint"),
-		field.Uint32("age_uint32"),
-		field.Uint64("age_uint64"),
-		field.Float("weight_float"),
-		field.Float32("weight_float32"),
-		field.UUID("class_id", uuid.UUID{}),
-		field.Time("enroll_at"),
-		field.Bool("status_bool"),
-	}
+		field.String("name").
+			Annotations(entsql.WithComments(true)).
+			Comment("Student name | 学生姓名"),
+		field.Int16("age").
+			Annotations(entsql.WithComments(true)).
+			Comment("Student age | 学生年龄"),
+		field.String("address").Optional().
+			Annotations(entsql.WithComments(true)).
+			Comment("Student's home address | 学生家庭住址 ")}
 }
 
 func (Student) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixins.IDMixin{},
+		mixins.UUIDMixin{},
 	}
 }
 

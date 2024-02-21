@@ -1,7 +1,7 @@
 {
 	"common": {
-		"success": "successfully",
-		"failed": "failed",
+		"success": "Successfully",
+		"failed": "Failed",
 		"updateSuccess": "Update successfully",
 		"updateFailed": "Update failed",
 		"createSuccess": "Create successfully",
@@ -14,7 +14,9 @@
 		"permissionDeny": "User does not have permission to access this interface",
 		"constraintError": "Operation failed: Data conflict",
 		"validationError": "Operation failed: Validation failed",
-		"notSingularError": "Operation failed: Data not unique"
+		"notSingularError": "Operation failed: Data not unique",
+		"serviceUnavailable": "Service is unavailable, please check if the service is enabled",
+		"cacheError": "Cache error"
 	},
 	"init": {
 		"alreadyInit": "The database had been initialized.",
